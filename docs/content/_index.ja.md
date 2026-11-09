@@ -13,7 +13,7 @@ machbase-neo の Web UI のカラーテーマを、ライブプレビューを�
 | **Cement 98** | |
 | ![Cement 98 の New タブ]({{< asset "images/newtab-cement98.png" >}}) | |
 
-machbase-neo 8.7.2 以降が必要です。
+machbase-neo 8.7.4 以降が必要です。
 
 ## 開く
 

@@ -12,7 +12,7 @@ machbase-neo 웹 UI 의 색 테마를 미리보기를 보면서 직접 만들고
 | **Cement 98** | |
 | ![Cement 98 테마의 New tab](screenshots/newtab-cement98.png) | |
 
-machbase-neo 8.7.2 이상이 필요합니다.
+machbase-neo 8.7.4 이상이 필요합니다.
 
 ## 열기
 

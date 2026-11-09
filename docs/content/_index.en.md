@@ -16,7 +16,7 @@ they are listed in **Settings → Theme** once the package is installed.
 | **Cement 98** | |
 | ![The New tab in Cement 98]({{< asset "images/newtab-cement98.png" >}}) | |
 
-Requires machbase-neo 8.7.2 or later.
+Requires machbase-neo 8.7.4 or later.
 
 ## Open it
 

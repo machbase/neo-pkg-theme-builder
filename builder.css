@@ -1,0 +1,941 @@
+/*
+ * The builder's own look follows the theme chosen in neo-web (the same --neo-* variables and dark
+ * defaults); the preview (#pv, preview.css) gets every variable set on itself and shows the theme
+ * being made. Corners follow the theme's roundness as neo-web's do: `calc(<size> * var(--neo-radius-scale, 1))`,
+ * all but circles (50%) and the small count pills, round whatever the theme.
+ */
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+body {
+    background: var(--neo-bg-primary, #1e1e1e);
+    color: var(--neo-text-primary, #f1f1f1);
+    font: 13px/1.4 Pretendard, -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
+    color-scheme: dark;
+}
+button,
+input,
+select {
+    font: inherit;
+    color: inherit;
+}
+.tb-grow {
+    flex: 1;
+}
+.mono,
+.tb-hex,
+pre {
+    font-family: D2Coding, ui-monospace, Menlo, Consolas, monospace;
+}
+
+.tb {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 1080px;
+}
+
+/* ---- top bar ---------------------------------------------------------------------------- */
+.tb-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    background: var(--neo-bg-header, #1e1e1e);
+}
+.tb-title {
+    margin-right: 4px;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.tb-name {
+    width: 210px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--neo-field-border, var(--neo-border-color-default, #626263));
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    outline: 0;
+    background: var(--neo-field-bg, var(--neo-bg-elevated, rgba(255, 255, 255, 0.13)));
+    font-weight: 600;
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-name:focus {
+    border-color: var(--neo-border-color-focus, #006cd2);
+}
+.tb-btn {
+    height: 30px;
+    padding: 0 12px;
+    border: 1px solid var(--neo-border-color-strong, #626263);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: transparent;
+    color: var(--neo-text-secondary, #c4c4c4);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.tb-btn:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.tb-seg {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--neo-border-color-strong, #626263);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+}
+.tb-seg button {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--neo-text-secondary, #c4c4c4);
+    font-size: 12px;
+    cursor: pointer;
+}
+.tb-seg button[aria-checked='true'] {
+    background: var(--neo-accent-main, #005fb8);
+    color: var(--neo-text-on-accent, #f1f1f1);
+}
+/* a button that opens a menu: its label and a chevron drawn as a line, not a ▾ in the font */
+.tb-btn--menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.tb-chev {
+    width: 10px;
+    height: 6px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+/* Save and its menu are one button cut in two: one outline, a line between */
+.tb-split {
+    display: flex;
+}
+.tb-split-main {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.tb-split-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    margin-left: -1px;
+    padding: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.tb-btn--primary {
+    border-color: var(--neo-button-primary-bg, #005fb8);
+    background: var(--neo-button-primary-bg, #005fb8);
+    color: var(--neo-text-on-accent, #f1f1f1);
+}
+.tb-btn--primary:hover {
+    background: var(--neo-accent-hover, #0075e2);
+}
+.tb-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--neo-accent-text, #4199ff);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.tb-msg {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 520px;
+    padding: 4px 10px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+    font-size: 12px;
+}
+.tb-msg[hidden] {
+    display: none;
+}
+.tb-msg[data-kind='error'] {
+    color: var(--neo-error-text, #fa6464);
+}
+.tb-msg[data-kind='ok'] #msg-text {
+    color: var(--neo-success-text, #9df486);
+}
+.tb-more {
+    position: relative;
+}
+.tb-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    min-width: 170px;
+    padding: 4px 0;
+    border: 1px solid var(--neo-menu-border, rgba(255, 255, 255, 0.13));
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    background: var(--neo-menu-bg, #2d2d2d);
+    box-shadow: var(--neo-menu-shadow, 0 4px 12px rgba(0, 0, 0, 0.3));
+}
+.tb-menu[hidden] {
+    display: none;
+}
+.tb-menu button {
+    padding: 6px 14px;
+    border: 0;
+    background: none;
+    color: var(--neo-text-primary, #f1f1f1);
+    text-align: left;
+    cursor: pointer;
+}
+.tb-menu button:hover {
+    background: var(--neo-menu-item-hover-bg, #3d3d3d);
+}
+
+/* ---- body ------------------------------------------------------------------------------- */
+.tb-body {
+    display: grid;
+    flex: 1;
+    grid-template-columns: 400px minmax(0, 1fr);
+    min-height: 0;
+}
+.tb-side {
+    min-height: 0;
+    overflow: auto;
+    border-right: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    background: var(--neo-bg-panel, #252525);
+}
+.tb-sec {
+    padding: 4px 0 10px;
+    border-bottom: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+}
+.tb-sec h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 10px 14px 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+.tb-step {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--neo-accent-main, #005fb8);
+    color: var(--neo-text-on-accent, #f1f1f1);
+    font-size: 11px;
+}
+.tb-note {
+    margin-left: auto;
+    color: var(--neo-text-muted, #727272);
+    font-size: 11px;
+    font-weight: 400;
+}
+details > summary {
+    list-style: none;
+    cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* start cards */
+.tb-starts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 0 12px;
+}
+.tb-start {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+.tb-start:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-start[aria-current='true'] {
+    border-color: var(--neo-border-color-focus, #006cd2);
+    box-shadow: inset 0 0 0 1px var(--neo-border-color-focus, #006cd2);
+}
+.tb-start-top {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+}
+.tb-start-name {
+    overflow: hidden;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tb-start-kind {
+    margin-left: auto;
+    color: var(--neo-text-muted, #727272);
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+.tb-start-kind--use {
+    color: var(--neo-success-text, #9df486);
+}
+.tb-start-bottom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 24px;
+}
+/* hidden but laid out until the card is under the pointer or focused: the card keeps its size, and
+   Tab from the card reaches it */
+.tb-start-del {
+    flex-shrink: 0;
+    height: 24px;
+    margin-left: auto;
+    padding: 0 10px;
+    border: 1px solid var(--neo-border-color-strong, #626263);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: transparent;
+    color: var(--neo-text-secondary, #c4c4c4);
+    font: inherit;
+    font-size: 11px;
+    line-height: 22px;
+    cursor: pointer;
+    visibility: hidden;
+}
+.tb-start:hover .tb-start-del,
+.tb-start:focus-within .tb-start-del {
+    visibility: visible;
+}
+.tb-start-del:hover,
+.tb-start-del:focus-visible {
+    border-color: var(--neo-error-main, #ff5353);
+    background: color-mix(in srgb, var(--neo-error-main, #ff5353) 16%, transparent);
+    color: var(--neo-error-text, #fa6464);
+}
+.tb-start-del:focus-visible {
+    outline: 2px solid var(--neo-border-color-focus, #006cd2);
+    outline-offset: 1px;
+}
+.tb-starts-label {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    color: var(--neo-text-muted, #727272);
+    font-size: 11px;
+}
+.tb-swatch {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    width: max-content;
+}
+.tb-swatch i {
+    display: block;
+    width: 13px;
+    height: 10px;
+}
+
+/* role groups */
+.tb-group {
+    margin: 0 8px 4px;
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+}
+.tb-group > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    color: var(--neo-text-secondary, #c4c4c4);
+    font-size: 12px;
+    font-weight: 600;
+}
+.tb-group > summary:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-group > summary::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.15s;
+}
+.tb-group[open] > summary::before {
+    transform: rotate(45deg);
+}
+.tb-group-sum {
+    margin-left: auto;
+    color: var(--neo-text-muted, #727272);
+    font-size: 11px;
+    font-weight: 400;
+}
+.tb-role {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto 78px;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 8px 5px 10px;
+    border-radius: calc(5px * var(--neo-radius-scale, 1));
+}
+.tb-role:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-role.flash {
+    animation: tb-flash 1.2s ease-out;
+}
+@keyframes tb-flash {
+    0%,
+    40% {
+        background: color-mix(in srgb, var(--neo-accent-main, #005fb8) 35%, transparent);
+    }
+}
+.tb-role-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.tb-role-text b {
+    font-size: 12.5px;
+    font-weight: 600;
+}
+.tb-role-text small {
+    overflow: hidden;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* where a role changes the web UI (theme-core parts + impact.json) */
+.tb-role-text small.tb-impact {
+    color: var(--neo-text-secondary, #c4c4c4);
+}
+/* a root color's row: the shared colors that change with it */
+.tb-role-text small.tb-moves {
+    color: var(--neo-text-tertiary, #a3a3a3);
+}
+.tb-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    /* in line with the group names below: the group's 8px margin + its summary's 8px padding */
+    margin: 16px 16px 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+}
+.tb-section b {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.tb-section small {
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11px;
+}
+.tb-section--first {
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+}
+/* the parts using a shared color, listed under it: following it, or customized */
+.tb-kids {
+    margin: 0 8px 6px 52px;
+}
+.tb-kids-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 6px;
+    border: 0;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: none;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11px;
+    cursor: pointer;
+}
+.tb-kids-toggle::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.15s;
+}
+.tb-kids-toggle[aria-expanded='true']::before {
+    transform: rotate(45deg);
+}
+.tb-kids-toggle:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-kids-count {
+    padding: 0 6px;
+    border-radius: 8px;
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+    color: var(--neo-text-secondary, #c4c4c4);
+}
+.tb-kids-own {
+    color: var(--neo-accent-text, #4199ff);
+    font-weight: 600;
+}
+.tb-role.tb-kid {
+    grid-template-columns: 26px minmax(0, 1fr) auto 78px;
+    gap: 8px;
+    margin-left: 6px;
+    padding: 4px 8px;
+    border-left: 2px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: 0 calc(5px * var(--neo-radius-scale, 1)) calc(5px * var(--neo-radius-scale, 1)) 0;
+}
+/* customized: marked in the accent, its own well and a way back */
+.tb-role.tb-kid--own {
+    border-left-color: var(--neo-accent-main, #005fb8);
+}
+/* following the shared color: its color shown as the well shows one (Customize gives it a well), and its value */
+.tb-kid-swatch {
+    position: relative;
+    width: 26px;
+    height: 18px;
+    overflow: hidden;
+    border: 1px solid var(--neo-border-color-strong, #626263);
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: repeating-conic-gradient(#8a8a8a 0% 25%, #5a5a5a 0% 50%) 0 0 / 8px 8px;
+}
+.tb-kid-swatch i {
+    position: absolute;
+    inset: 0;
+}
+.tb-kid-hex {
+    width: 78px;
+    padding: 0 7px;
+    color: var(--neo-text-secondary, #c4c4c4);
+    font: 11.5px D2Coding, ui-monospace, Menlo, Consolas, monospace;
+}
+.tb-follow {
+    color: var(--neo-text-muted, #727272);
+    font-size: 10.5px;
+    white-space: nowrap;
+}
+button.tb-follow {
+    padding: 1px 6px;
+    border: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: 10px;
+    background: none;
+    color: var(--neo-text-secondary, #c4c4c4);
+    cursor: pointer;
+}
+button.tb-follow:hover {
+    border-color: var(--neo-border-color-focus, #006cd2);
+}
+.tb-hex {
+    width: 78px;
+    height: 24px;
+    padding: 0 6px;
+    border: 1px solid var(--neo-field-border, var(--neo-border-color-default, rgba(255, 255, 255, 0.13)));
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: var(--neo-field-bg, var(--neo-bg-elevated, rgba(255, 255, 255, 0.13)));
+    font-size: 11.5px;
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-hex[aria-invalid='true'] {
+    border-color: var(--neo-error-main, #ff5353);
+}
+
+/* a color well: the swatch over a checkerboard, so a translucent color reads as one */
+.tb-well {
+    position: relative;
+    display: block;
+    width: 34px;
+    height: 24px;
+    overflow: hidden;
+    border: 1px solid var(--neo-border-color-strong, #626263);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: repeating-conic-gradient(#8a8a8a 0% 25%, #5a5a5a 0% 50%) 0 0 / 8px 8px;
+    cursor: pointer;
+}
+.tb-well i {
+    position: absolute;
+    inset: 0;
+}
+.tb-well input {
+    position: absolute;
+    inset: -6px;
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    opacity: 0;
+    cursor: pointer;
+}
+.tb-well--small {
+    width: 26px;
+    height: 18px;
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+}
+.tb-well--none {
+    background: var(--neo-field-bg, #353535);
+    cursor: default;
+}
+.tb-well--none::after {
+    content: 'fx';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font: 10px D2Coding, ui-monospace, monospace;
+}
+
+/* every token */
+.tb-adv-bar {
+    display: flex;
+    gap: 6px;
+    padding: 0 12px 8px;
+}
+.tb-adv-bar input,
+.tb-adv-bar select {
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--neo-field-border, var(--neo-border-color-default, rgba(255, 255, 255, 0.13)));
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    outline: 0;
+    background: var(--neo-field-bg, var(--neo-bg-elevated, rgba(255, 255, 255, 0.13)));
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-adv-bar input {
+    flex: 1;
+}
+.tb-adv-bar select option {
+    background: var(--neo-menu-bg, #2d2d2d);
+}
+#rows {
+    padding: 0 6px;
+}
+.tb-row {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) 170px 14px;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 6px;
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+}
+.tb-row:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-row.flash {
+    animation: tb-flash 1.2s ease-out;
+}
+.tb-row-name {
+    overflow: hidden;
+    font: 11.5px D2Coding, ui-monospace, Menlo, monospace;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tb-row input[type='text'] {
+    width: 100%;
+    height: 22px;
+    padding: 0 5px;
+    border: 1px solid transparent;
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: transparent;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font: 11px D2Coding, ui-monospace, Menlo, monospace;
+}
+.tb-row input[type='text']:focus {
+    border-color: var(--neo-border-color-focus, #006cd2);
+    outline: 0;
+    background: var(--neo-field-bg, var(--neo-bg-elevated, rgba(255, 255, 255, 0.13)));
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-row input[aria-invalid='true'] {
+    border-color: var(--neo-error-main, #ff5353);
+}
+.tb-pin {
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+.tb-pin::before {
+    content: '';
+    display: block;
+    width: 7px;
+    height: 7px;
+    margin: auto;
+    border-radius: 50%;
+    background: var(--neo-warning-main, #ff9800);
+}
+.tb-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px 0;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11.5px;
+}
+
+/* ---- stage ------------------------------------------------------------------------------ */
+.tb-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    min-height: 0;
+    padding: 12px 16px 16px;
+    overflow: auto;
+    background: var(--neo-bg-secondary, #252525);
+}
+.tb-stage-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    border-bottom: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+}
+/* the preview's two scenes: tabs as the web UI draws them — the open one underlined in the accent
+   (a pill on a pill of the same color told them apart by the weight of the text alone) */
+/* eight scenes: on a narrow screen the tabs scroll sideways rather than fold */
+.tb-tabs {
+    display: flex;
+    flex: 0 1 auto;
+    gap: 14px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* a shade at the right edge while tabs are cut off there: the cover rides at the end of the tabs
+       (local) and hides the shade (fixed to the box) once they are scrolled to the end */
+    background:
+        linear-gradient(to left, var(--neo-bg-secondary, #252525) 40%, transparent) right center / 28px 100% no-repeat local,
+        linear-gradient(to left, color-mix(in srgb, var(--neo-text-primary, #f1f1f1) 22%, transparent), transparent) right center / 18px 100% no-repeat scroll;
+}
+.tb-tabs button {
+    margin-bottom: -1px;
+    padding: 6px 2px 7px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.tb-tabs button:hover {
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-tabs button[aria-selected='true'] {
+    border-bottom-color: var(--neo-accent-main, #005fb8);
+    color: var(--neo-text-primary, #f1f1f1);
+}
+/* how many colors the scene holds */
+.tb-tab-n {
+    margin-left: 5px;
+    padding: 0 5px;
+    border-radius: 8px;
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 10.5px;
+    font-weight: 600;
+}
+/* a color's row under the pointer: the scenes it shows in */
+.tb-tabs button.tb-tab--has {
+    color: var(--neo-text-primary, #f1f1f1);
+}
+.tb-tabs button.tb-tab--has .tb-tab-n {
+    background: var(--neo-accent-main, #005fb8);
+    color: var(--neo-text-on-accent, #ffffff);
+}
+/* the tabs take the room they need first; the hint has what is left, on two lines if it must */
+/* the tabs keep their room; the hint takes what is left, on one line */
+.tb-hint {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-left: auto;
+    padding-bottom: 8px;
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--neo-text-muted, #818181);
+    font-size: 11.5px;
+}
+.tb-checks {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+}
+.tb-check {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 9px;
+    border-radius: calc(5px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated, #2c2c2c);
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11px;
+    cursor: pointer;
+}
+.tb-check b {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    color: var(--neo-text-primary, #f1f1f1);
+    font: 600 13px D2Coding, ui-monospace, Menlo, monospace;
+}
+.tb-check em {
+    font: 600 10px Pretendard, sans-serif;
+    font-style: normal;
+}
+.tb-check em.ok {
+    color: var(--neo-success-text, #9df486);
+}
+.tb-check em.low {
+    color: var(--neo-error-text, #fa6464);
+}
+/* below the need but as the start draws it: not something this theme broke */
+.tb-check em.same {
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-weight: 400;
+}
+.tb-css summary {
+    display: flex;
+    gap: 6px;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11.5px;
+}
+.tb-css pre {
+    max-height: 260px;
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    overflow: auto;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-field-bg, #353535);
+    color: var(--neo-text-secondary, #c4c4c4);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* corners */
+.tb-corners {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+}
+.tb-corner-icon {
+    width: 26px;
+    height: 20px;
+    margin-left: 4px;
+    border-top: 2px solid var(--neo-text-secondary, #c4c4c4);
+    border-left: 2px solid var(--neo-text-secondary, #c4c4c4);
+}
+.tb-seg--sm button {
+    padding: 3px 7px;
+    font-size: 11px;
+}
+
+/* cursor effect */
+.tb-fxs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 12px;
+}
+.tb-fx {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.tb-fx:hover {
+    background: var(--neo-hover-bg, rgba(255, 255, 255, 0.08));
+}
+.tb-fx[aria-pressed='true'] {
+    border-color: var(--neo-border-color-focus, #006cd2);
+    box-shadow: inset 0 0 0 1px var(--neo-border-color-focus, #006cd2);
+}
+.tb-fx-icon {
+    justify-self: center;
+    width: 14px;
+    height: 18px;
+    background: var(--neo-text-secondary, #c4c4c4);
+    clip-path: polygon(0 0, 0 85%, 30% 66%, 52% 100%, 70% 93%, 48% 60%, 90% 60%);
+}
+.tb-fx-icon--sandevistan {
+    background: linear-gradient(135deg, #2de2e6, #b44cff 60%, #ff2a6d);
+}
+.tb-fx-icon--comet {
+    background: linear-gradient(225deg, rgba(150, 120, 255, 0) 0%, #a0b4ff 45%, #e6f6ff 80%, #ffffff 100%);
+}
+.tb-fx-note {
+    margin: 2px 2px 0;
+    color: var(--neo-text-tertiary, #a3a3a3);
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+/* the sign-in page's picture */
+.tb-login {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 4px;
+    padding: 6px 8px;
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+}
+.tb-login.flash {
+    animation: tb-flash 1.2s ease-out;
+}
+.tb-login-row {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+}
+.tb-login-thumb {
+    width: 64px;
+    height: 40px;
+    border: 1px solid var(--neo-border-color-default, rgba(255, 255, 255, 0.13));
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-canvas, #191919) center / cover no-repeat;
+}
+.tb-login-acts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.tb-login .tb-fx-note {
+    margin: 0;
+}

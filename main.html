@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Theme Builder</title>
+        <link rel="stylesheet" href="builder.css?v=1.0.0" />
+        <link rel="stylesheet" href="preview.css?v=1.0.0" />
+        <script src="theme-core.js?v=1.0.0"></script>
+        <script src="cursor-fx.js?v=1.0.0"></script>
+        <script src="builder.js?v=1.0.0" defer></script>
+    </head>
+    <body>
+        <div class="tb">
+            <header class="tb-top">
+                <span class="tb-title">Theme Builder</span>
+                <input class="tb-name" id="name" aria-label="Theme name" maxlength="40" autocomplete="off" spellcheck="false" />
+                <span class="tb-grow"></span>
+                <div class="tb-msg" id="msg" role="status" hidden>
+                    <span id="msg-text"></span>
+                    <button type="button" class="tb-link" id="msg-action" hidden></button>
+                </div>
+                <div class="tb-more">
+                    <button type="button" class="tb-btn tb-btn--menu" id="css-menu-btn" data-menu="css-menu" aria-haspopup="menu" aria-expanded="false">CSS<svg class="tb-chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" /></svg></button>
+                    <div class="tb-menu" id="css-menu" role="menu" hidden>
+                        <button type="button" role="menuitem" id="import">Import CSS…</button>
+                        <button type="button" role="menuitem" id="export">Export CSS</button>
+                    </div>
+                    <input type="file" id="import-file" accept=".css,text/css" hidden />
+                </div>
+                <div class="tb-more tb-split">
+                    <button type="button" class="tb-btn tb-split-main" id="save" data-title="Saves it to My themes in this browser">Save</button>
+                    <button type="button" class="tb-btn tb-split-arrow" id="save-menu-btn" data-menu="save-menu" aria-haspopup="menu" aria-expanded="false" aria-label="More ways to save" data-title="More ways to save"><svg class="tb-chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" /></svg></button>
+                    <div class="tb-menu" id="save-menu" role="menu" hidden>
+                        <button type="button" role="menuitem" id="save-copy">Save as new theme</button>
+                    </div>
+                </div>
+                <button type="button" class="tb-btn tb-btn--primary" id="save-use" data-title="Saves it to My themes and switches the web UI to it">Use this theme</button>
+            </header>
+
+            <main class="tb-body">
+                <aside class="tb-side">
+                    <section class="tb-sec">
+                        <h2><span class="tb-step">1</span>Start from</h2>
+                        <div class="tb-starts" id="starts"></div>
+                    </section>
+                    <section class="tb-sec">
+                        <h2><span class="tb-step">2</span>Colors <span class="tb-note" id="mode"></span></h2>
+                        <div id="roles"></div>
+                    </section>
+                    <section class="tb-sec">
+                        <h2><span class="tb-step">3</span>Cursor effect</h2>
+                        <div class="tb-fxs" id="effects"></div>
+                    </section>
+                    <section class="tb-sec">
+                        <h2><span class="tb-step">4</span>Sign-in page</h2>
+                        <div class="tb-login" id="login"></div>
+                        <input type="file" id="login-file" accept="image/*" hidden />
+                    </section>
+                    <section class="tb-sec" id="adv">
+                        <h2><span class="tb-step">5</span>All tokens <span class="tb-note" id="token-count"></span></h2>
+                        <div class="tb-adv-bar">
+                            <input id="search" type="search" placeholder="Filter: name or value" spellcheck="false" />
+                            <select id="group" aria-label="Token group"></select>
+                        </div>
+                        <div id="rows"></div>
+                        <div class="tb-foot">
+                            <span id="tuned"></span>
+                            <span class="tb-grow"></span>
+                            <button type="button" class="tb-link" id="reset">Discard changes</button>
+                        </div>
+                    </section>
+                </aside>
+
+                <section class="tb-stage" aria-label="Preview">
+                    <div class="tb-stage-bar">
+                        <div class="tb-tabs" role="tablist">
+                            <button type="button" role="tab" data-scene="work" aria-selected="true">Workspace<span class="tb-tab-n"></span></button>
+                            <button type="button" role="tab" data-scene="explorer" aria-selected="false">Explorer<span class="tb-tab-n"></span></button>
+                            <button type="button" role="tab" data-scene="newtab" aria-selected="false">New tab<span class="tb-tab-n"></span></button>
+                            <button type="button" role="tab" data-scene="dialogs" aria-selected="false">Dialogs<span class="tb-tab-n"></span></button>
+                            <button type="button" role="tab" data-scene="status" aria-selected="false">Status<span class="tb-tab-n"></span></button>
+                            <button type="button" role="tab" data-scene="login" aria-selected="false">Sign-in<span class="tb-tab-n"></span></button>
+                        </div>
+                        <span class="tb-hint">Click any part of the preview to change its color.</span>
+                    </div>
+
+                    <div class="pv" id="pv" data-scene="work">
+                        <!-- the workspace: GNB, tab bar, side panel, editor, results, console -->
+                        <div class="pv-scene pv-scene--work" data-scene-of="work">
+                            <nav class="pv-rail" data-role="gnbBg">
+                                <span class="pv-ri on"><i class="pv-ri-line" data-role="gnbMarker"></i><i class="pv-ic pv-ic-files" data-role="gnbIconActive"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-db"></i></span>
+                                <span class="pv-ri hv" data-role="gnbHover"><i class="pv-ic pv-ic-term" data-role="gnbIconActive"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-clock"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-apps"></i></span>
+                                <span class="pv-grow"></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-gear"></i></span>
+                            </nav>
+                            <aside class="pv-side" data-role="sideBg">
+                                <div class="pv-ver" data-token="border-color-default"><span data-role="sideText">Machbase-neo</span> <span data-role="sideTextMuted">v8.7.2</span></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">OPEN EDITORS</span></div>
+                                <div class="pv-it pv-it--open" data-role="sideActive"><i class="pv-fi pv-fi--sql" data-token="icon-sql"></i><span data-role="sideText">query.sql</span></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">EXPLORER</span><span class="pv-acts"><i class="pv-ico" data-role="sideIcon"></i><i class="pv-ico pv-ico--round" data-role="sideIcon"></i></span></div>
+                                <div class="pv-it hv" data-role="sideHover"><i class="pv-fi pv-fi--dir" data-token="icon-folder"></i><span data-role="sideText">demo</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--sql" data-token="icon-sql"></i><span data-role="sideText">query.sql</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--tql" data-token="icon-tql"></i><span data-role="sideText">chart.tql</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--dsh" data-token="icon-dsh"></i><span data-role="sideText">plant.dsh</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--wrk" data-token="icon-wrk"></i><span data-role="sideText">report.wrk</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--taz" data-token="icon-taz"></i><span data-role="sideText">sensors.taz</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--md" data-token="icon-md"></i><span data-role="sideText">README.md</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--json" data-token="icon-json"></i><span data-role="sideText">meta.json</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-fi pv-fi--csv" data-token="icon-csv"></i><span data-role="sideText">export.csv</span></div>
+                                <div class="pv-it"><i class="pv-fi pv-fi--git" data-token="icon-folder-git"></i><span data-role="sideText">neo-dash</span></div>
+                                <div class="pv-it"><i class="pv-fi pv-fi--dir" data-token="icon-folder"></i><span data-role="sideText">etc</span></div>
+                                <div class="pv-it"><i class="pv-fi pv-fi--pub" data-token="icon-folder-public"></i><span data-role="sideText">public</span></div>
+                            </aside>
+                            <div class="pv-main">
+                                <div class="pv-tabs" data-role="tabbarBg">
+                                    <span class="pv-tab on" data-role="tabbarActiveBg"><i class="pv-fi pv-fi--sql" data-token="icon-sql"></i><span data-role="tabbarText">query.sql</span><i class="pv-tab-line" data-role="tabbarMarker"></i></span>
+                                    <span class="pv-tab" data-role="tabbarBg"><i class="pv-fi pv-fi--tql" data-token="icon-tql"></i><span data-role="tabbarTextInactive">chart.tql</span></span>
+                                    <span class="pv-tab hv" data-role="tabbarHover"><i class="pv-fi pv-fi--dsh" data-token="icon-dsh"></i><span data-role="tabbarTextInactive">plant.dsh</span></span>
+                                </div>
+                                <div class="pv-page" data-role="surface">
+                                    <div class="pv-ph" data-role="tabbarActiveBg">
+                                        <i class="pv-tool pv-tool--run" data-role="icon"></i>
+                                        <span class="pv-grow"></span>
+                                        <span class="pv-tb on" data-role="activeBg"><i class="pv-tool" data-token="active-text"></i></span><span class="pv-tb hv" data-role="toolbarHover"><i class="pv-tool" data-role="icon"></i></span><i class="pv-tool" data-role="icon"></i>
+                                    </div>
+                                    <div class="pv-split">
+                                        <div class="pv-code" data-role="surface">
+                                            <div><span class="pv-ln">1</span><span class="pv-kw">SELECT</span> NAME, TIME, VALUE</div>
+                                            <div><span class="pv-ln">2</span><span class="pv-kw">FROM</span> DEMO_SENSOR</div>
+                                            <div><span class="pv-ln">3</span><span class="pv-kw">WHERE</span> NAME = <span class="pv-str">'temp-01'</span></div>
+                                            <div><span class="pv-ln">4</span><span class="pv-kw">LIMIT</span> <span class="pv-num">100</span></div>
+                                            <p class="pv-code-note">editor text: the scheme's</p>
+                                        </div>
+                                        <div class="pv-res" data-role="surface">
+                                            <div class="pv-subtabs" data-role="surface">
+                                                <span class="pv-sub on" data-role="ink">RESULT<i class="pv-sub-line" data-token="accent-hover"></i></span>
+                                                <span class="pv-sub" data-role="muted">CHART</span>
+                                            </div>
+                                            <table class="pv-grid">
+                                                <thead>
+                                                    <tr data-role="tableHeaderBg"><th data-role="tableHeaderText">#</th><th data-role="tableHeaderText">NAME</th><th data-role="tableHeaderText">TIME</th><th data-role="tableHeaderText">VALUE</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr data-role="surface"><td data-role="tableRowNumber">1</td><td data-token="text-secondary">temp-01</td><td data-token="text-secondary">14:02:11</td><td data-token="text-secondary">21.48</td></tr>
+                                                    <tr class="odd" data-role="tableStripe"><td data-role="tableRowNumber">2</td><td data-token="text-secondary">temp-01</td><td data-token="text-secondary">14:02:12</td><td data-token="text-secondary">21.51</td></tr>
+                                                    <tr class="hv" data-role="tableRowHover"><td data-role="tableRowNumber">3</td><td data-token="text-secondary">temp-01</td><td data-token="text-secondary">14:02:13</td><td data-token="text-secondary">21.47</td></tr>
+                                                    <tr class="odd" data-role="tableStripe"><td data-role="tableRowNumber">4</td><td data-token="text-secondary">temp-02</td><td data-token="text-secondary">14:02:13</td><td data-token="text-secondary">19.02</td></tr>
+                                                    <tr class="sel" data-role="tableRowActive"><td data-token="selected-text">5</td><td data-token="selected-text">temp-02</td><td data-token="selected-text">14:02:14</td><td data-token="selected-text">19.10</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="pv-meta" data-role="muted">5 rows · elapsed 12.4 ms</div>
+                                            <i class="pv-thumb" data-role="scrollbar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pv-console">
+                                    <div class="pv-ch" data-role="consoleBg"><span class="pv-ctab" data-role="consoleTabText">Console<i data-role="consoleMarker"></i></span><span class="pv-acts"><span class="pv-cb hv" data-role="consoleHover"><i class="pv-ico" data-role="consoleIcon"></i></span><i class="pv-ico pv-ico--round" data-role="consoleIcon"></i></span></div>
+                                    <div class="pv-cbody" data-role="consoleBodyBg">
+                                        <div class="pv-log" data-role="consoleTextMuted">14:02:11 <b data-role="successText">INFO</b> query.sql · 5 rows</div>
+                                        <div class="pv-log pv-log--sel" data-role="consoleActive"><span data-role="consoleText">14:02:12 <b data-role="warningText">WARN</b> slow scan on DEMO_SENSOR</span></div>
+                                        <div class="pv-log" data-role="consoleTextMuted">14:02:13 <b data-role="errorText">ERROR</b> table not found: SENSOR_X</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- the New tab page: what the server is doing, and what you can make (each kind its file icon) -->
+                        <div class="pv-scene pv-scene--newtab" data-scene-of="newtab">
+                            <nav class="pv-rail" data-role="gnbBg">
+                                <span class="pv-ri on"><i class="pv-ri-line" data-role="gnbMarker"></i><i class="pv-ic pv-ic-files" data-role="gnbIconActive"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-db"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-term"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-clock"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-apps"></i></span>
+                                <span class="pv-grow"></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-gear"></i></span>
+                            </nav>
+                            <aside class="pv-side" data-role="sideBg">
+                                <div class="pv-ver" data-token="border-color-default"><span data-role="sideText">Machbase-neo</span> <span data-role="sideTextMuted">v8.7.2</span></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">OPEN EDITORS</span></div>
+                                <div class="pv-it pv-it--open" data-role="sideActive"><i class="pv-fi pv-fi--new" data-token="icon-new"></i><span data-role="sideText">new</span></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">EXPLORER</span><span class="pv-acts"><i class="pv-ico" data-role="sideIcon"></i><i class="pv-ico pv-ico--round" data-role="sideIcon"></i></span></div>
+                                <div class="pv-it"><i class="pv-fi pv-fi--dir" data-token="icon-folder"></i><span data-role="sideText">demo</span></div>
+                                <div class="pv-it"><i class="pv-fi pv-fi--pub" data-token="icon-folder-public"></i><span data-role="sideText">public</span></div>
+                            </aside>
+                            <div class="pv-main pv-main--page">
+                                <div class="pv-tabs" data-role="tabbarBg">
+                                    <span class="pv-tab on" data-role="tabbarActiveBg"><i class="pv-fi pv-fi--new" data-token="icon-new"></i><span data-role="tabbarText">new</span><i class="pv-tab-line" data-role="tabbarMarker"></i></span>
+                                </div>
+                                <div class="pv-page" data-role="surface">
+                                    <div class="pv-ph" data-role="tabbarActiveBg"><span data-role="ink">New…</span><span class="pv-grow"></span><span class="pv-btn pv-btn--sec pv-btn--sm" data-token="border-color-default"><span data-role="muted">Cancel</span></span><span class="pv-btn pv-btn--pri pv-btn--sm" data-role="button"><span data-role="onAccent">Done</span></span></div>
+                                    <!-- Customize is open: the page and, beside it, the Widgets panel (Drawers) -->
+                                    <div class="pv-page-body">
+                                    <div class="pv-nt">
+                                        <span class="pv-nt-l" data-token="text-tertiary">SERVER PULSE</span>
+                                        <div class="pv-nt-row">
+                                        <div class="pv-stat" data-role="raised"><span class="pv-stat-h"><span data-token="text-tertiary">Rows appended</span><code data-role="muted">append</code></span><b data-role="ink">0<small data-token="text-tertiary"> / min</small></b><svg class="pv-spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path class="pv-spark-l pv-spark-l--accent" data-role="accent" d="M0 18 L100 18" /></svg></div>
+                                        <div class="pv-stat" data-role="raised"><span class="pv-stat-h"><span data-token="text-tertiary">CPU</span><code data-role="muted">cpu</code></span><b data-role="ink">20.0<small data-token="text-tertiary"> %</small></b><svg class="pv-spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path class="pv-spark-l pv-spark-l--accent" data-role="accent" d="M0 20 L20 19 L28 4 L34 20 L60 19 L68 6 L74 20 L100 18" /></svg></div>
+                                        <div class="pv-stat" data-role="raised"><span class="pv-stat-h"><span data-token="text-tertiary">Memory</span><code data-role="muted">mem</code></span><b data-role="ink">67.0<small data-token="text-tertiary"> %</small></b><svg class="pv-spark" viewBox="0 0 100 24" preserveAspectRatio="none"><path class="pv-spark-l pv-spark-l--accent" data-role="accent" d="M0 14 L18 13 L24 3 L30 15 L60 12 L72 5 L78 13 L100 10" /></svg></div>
+                                            <div class="pv-stat pv-stat--hi" data-role="raised"><span class="pv-stat-h"><span data-token="text-tertiary">Recorded so far</span></span><b data-role="ink">52<small data-token="text-tertiary"> metrics</small></b><span class="pv-btn pv-btn--pri pv-btn--sm" data-role="button"><span data-role="onAccent">Open as dashboard</span></span></div>
+                                        </div>
+                                        <span class="pv-nt-l" data-token="text-tertiary">CREATE NEW</span>
+                                        <div class="pv-nt-row pv-nt-row--new">
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--sql" data-token="icon-sql"></i><span data-role="ink">SQL</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--tql" data-token="icon-tql"></i><span data-role="ink">TQL</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--dsh" data-token="icon-dsh"></i><span data-role="ink">Dashboard</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--wrk" data-token="icon-wrk"></i><span data-role="ink">Worksheet</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--taz" data-token="icon-taz"></i><span data-role="ink">Tag Analyzer</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--md" data-token="icon-md"></i><span data-role="ink">Markdown</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--json" data-token="icon-json"></i><span data-role="ink">JSON</span></span>
+                                            <span class="pv-new" data-role="raised"><i class="pv-fi pv-fi--csv" data-token="icon-csv"></i><span data-role="ink">CSV</span></span>
+                                        </div>
+                                    </div>
+                                    <aside class="pv-drawer" data-role="panel">
+                                        <div class="pv-drawer-h"><span data-role="ink">Widgets</span><i data-token="text-tertiary">✕</i></div>
+                                        <span class="pv-input pv-drawer-search" data-role="fieldBorder"><i class="pv-ico pv-ico--round" data-role="fieldIcon"></i><span class="pv-placeholder" data-role="muted">Search widgets</span></span>
+                                        <span class="pv-drawer-cat" data-role="muted">LAYOUT</span>
+                                        <div class="pv-drawer-item" data-role="raised"><span data-role="ink">Section</span><small data-token="text-tertiary">A row with a title</small></div>
+                                        <span class="pv-drawer-cat" data-role="muted">BUILT-IN</span>
+                                        <div class="pv-drawer-item" data-role="raised"><span data-role="ink">Server pulse</span><small data-token="text-tertiary">Live CPU, memory…</small></div>
+                                        <div class="pv-drawer-item" data-role="raised"><span data-role="ink">Shells</span><small data-token="text-tertiary">Terminals on the server</small></div>
+                                    </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explorer: the side panel's lists — the DB explorer (each table's kind in its icon color, the open
+                             table selected) and the packages (version, where each installs from, an update) — and a table's page -->
+                        <div class="pv-scene pv-scene--explorer" data-scene-of="explorer">
+                            <nav class="pv-rail" data-role="gnbBg">
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-files"></i></span>
+                                <span class="pv-ri on"><i class="pv-ri-line" data-role="gnbMarker"></i><i class="pv-ic pv-ic-db" data-role="gnbIconActive"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-term"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-clock"></i></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-apps"></i></span>
+                                <span class="pv-grow"></span>
+                                <span class="pv-ri" data-role="gnbIcon"><i class="pv-ic pv-ic-gear"></i></span>
+                            </nav>
+                            <aside class="pv-side" data-role="sideBg">
+                                <div class="pv-search"><span class="pv-input" data-role="fieldBorder"><i class="pv-ico pv-ico--round" data-role="sideIcon"></i><span class="pv-placeholder" data-role="sideTextMuted">Search tables</span></span></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">DB EXPLORER</span><span class="pv-acts"><i class="pv-ico" data-role="sideIcon"></i><i class="pv-ico pv-ico--round" data-role="sideIcon"></i></span></div>
+                                <div class="pv-it"><i class="pv-dbi" data-role="sideIcon"></i><span data-role="sideText">MACHBASEDB</span></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--tag"></i><span data-role="sideText">DEMO_SENSOR</span><em data-role="sideTextMuted">12,402</em></div>
+                                <div class="pv-it pv-it--in pv-it--open" data-role="sideActive"><i class="pv-tt pv-tt--log"></i><span data-role="sideText">DEMO_LOG</span><em data-role="sideTextMuted">500</em></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--transaction"></i><span data-role="sideText">DSH_TEXT_LOG</span><em data-role="sideTextMuted">11</em></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--volatile"></i><span data-role="sideText">LIVE_STATE</span><em data-role="sideTextMuted">8</em></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--lookup"></i><span data-role="sideText">SITES</span><em data-role="sideTextMuted">4</em></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--kv"></i><span data-role="sideText">SETTINGS</span><em data-role="sideTextMuted">27</em></div>
+                                <div class="pv-it pv-it--in"><i class="pv-tt pv-tt--view"></i><span data-role="sideText">DSH_LOG_VIEW</span><em data-role="sideTextMuted">11</em></div>
+                                <div class="pv-sh" data-role="header"><span data-role="sideText">PACKAGES</span><span class="pv-acts"><i class="pv-ico pv-ico--round" data-role="sideIcon"></i></span></div>
+                                <div class="pv-pkg pv-pkg--sel" data-role="sideHover"><i class="pv-pkg-bar" data-role="accent"></i><i class="pv-pkg-ic"></i><span class="pv-pkg-top"><b data-role="sideText">neo-pkg-theme…</b><span class="pv-chip pv-chip--install" data-role="accent"><span data-role="onAccent">v1.13</span></span><span class="pv-chip pv-chip--local"><span data-role="link">local</span></span></span><span class="pv-pkg-pub"><span data-token="text-tertiary">Theme Builder</span></span><span class="pv-pkg-foot"><span data-token="text-tertiary"></span><span class="pv-btn pv-btn--line pv-btn--sm" data-token="border-color-strong"><span data-role="ink">Uninstall</span></span></span></div>
+                                <div class="pv-pkg hv" data-role="sideHover"><i class="pv-pkg-ic"></i><span class="pv-pkg-top"><b data-role="sideText">neo-pkg-replication</b><span class="pv-chip pv-chip--ver" data-role="neutralButton"><span data-token="text-primary">v1.0.7</span></span></span><span class="pv-pkg-pub"><i class="pv-ok" data-role="link"></i><span data-token="text-tertiary">machbase</span></span><span class="pv-pkg-foot"><span data-token="text-tertiary">Data replication</span><span class="pv-btn pv-btn--pri pv-btn--sm" data-role="button"><span data-role="onAccent">Install</span></span></span></div>
+                                <div class="pv-pkg"><i class="pv-pkg-ic"></i><span class="pv-pkg-top"><b data-role="sideText">neo-pkg-opcua</b><span class="pv-chip pv-chip--ver" data-role="neutralButton"><span data-token="text-primary">v1.0.9</span></span><span class="pv-chip pv-chip--update" data-role="warning"><span data-role="onAccent">update</span></span></span><span class="pv-pkg-pub"><i class="pv-ok" data-role="link"></i><span data-token="text-tertiary">machbase</span></span><span class="pv-pkg-foot"><span data-token="text-tertiary">OPC-UA client</span><span class="pv-btn pv-btn--pri pv-btn--sm" data-role="button"><span data-role="onAccent">Install</span></span></span></div>
+                            </aside>
+                            <div class="pv-main pv-main--page">
+                                <div class="pv-tabs" data-role="tabbarBg">
+                                    <span class="pv-tab" data-role="tabbarBg"><i class="pv-fi pv-fi--new" data-token="icon-new"></i><span data-role="tabbarTextInactive">new</span></span>
+                                    <span class="pv-tab on" data-role="tabbarActiveBg"><i class="pv-tt pv-tt--log"></i><span data-role="tabbarText">TABLE: DEMO_LOG</span><i class="pv-tab-line" data-role="tabbarMarker"></i></span>
+                                    <span class="pv-tab" data-role="tabbarBg"><i class="pv-fi pv-fi--app" data-token="icon-new"></i><span data-role="tabbarTextInactive">APP: neo-pkg-theme-builder</span></span>
+                                </div>
+                                <div class="pv-page pv-dbp" data-role="surface">
+                                    <div class="pv-dbp-h" data-role="tabbarActiveBg"><span class="pv-dbp-t" data-role="ink">Table</span><span class="pv-tbadge pv-tt-c--log"><span data-role="ink">LOG</span></span><span data-role="ink">DEMO_LOG</span><span data-token="text-tertiary">(MACHBASEDB.SYS)</span><span class="pv-grow"></span><span data-role="ink">Record: 500</span></div>
+                                    <div class="pv-dbp-s" data-role="ink">Column</div>
+                                    <table class="pv-grid pv-grid--db">
+                                        <thead><tr data-role="tableHeaderBg"><th data-role="tableHeaderText">NAME</th><th data-role="tableHeaderText">TYPE</th><th data-role="tableHeaderText">LENGTH</th><th data-role="tableHeaderText">DESC</th></tr></thead>
+                                        <tbody>
+                                            <tr data-role="surface"><td data-token="text-secondary">TIME</td><td data-token="text-secondary">datetime</td><td data-token="text-secondary">31</td><td data-token="text-secondary"></td></tr>
+                                            <tr class="odd" data-role="tableStripe"><td data-token="text-secondary">LEVEL</td><td data-token="text-secondary">varchar</td><td data-token="text-secondary">10</td><td data-token="text-secondary"></td></tr>
+                                            <tr class="sel" data-role="tableRowActive"><td data-token="selected-text">SOURCE</td><td data-token="selected-text">varchar</td><td data-token="selected-text">40</td><td data-token="selected-text"></td></tr>
+                                            <tr class="hv" data-role="tableRowHover"><td data-token="text-secondary">MESSAGE</td><td data-token="text-secondary">varchar</td><td data-token="text-secondary">200</td><td data-token="text-secondary"></td></tr>
+                                            <tr class="odd" data-role="tableStripe"><td data-token="text-secondary">LATENCY</td><td data-token="text-secondary">double</td><td data-token="text-secondary">17</td><td data-token="text-secondary"></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- a dialog over the page (the backdrop), a context menu, a tooltip -->
+                        <div class="pv-scene pv-scene--dialogs" data-scene-of="dialogs" data-role="surface">
+                            <div class="pv-backdrop" data-token="bg-backdrop"></div>
+                            <div class="pv-menu" data-role="menu">
+                                <div class="pv-mi" data-role="ink"><i class="pv-mic" data-role="menuIcon"></i>Rename</div>
+                                <div class="pv-mi hv" data-role="menuHover"><i class="pv-mic" data-role="menuIcon"></i><span data-role="ink">Duplicate</span></div>
+                                <div class="pv-mi" data-role="ink"><i class="pv-mic" data-role="menuIcon"></i>Theme</div>
+                            </div>
+                            <div class="pv-dlg" data-role="dialogBg">
+                                <div class="pv-dlg-h" data-role="dialogTitle">Package settings<span class="pv-help" data-role="icon">?</span></div>
+                                <div class="pv-tip" data-role="tooltip"><span data-role="tooltipText">Kept for this package only</span></div>
+                                <div class="pv-dlg-b">
+                                    <div class="pv-field" data-role="ink">Name<span class="pv-input focus" data-role="fieldBg"><span data-role="ink">neo-pkg-coin</span></span></div>
+                                    <div class="pv-field" data-role="ink">Filter<span class="pv-input" data-role="fieldBorder"><i class="pv-ico pv-ico--round" data-role="fieldIcon"></i><span class="pv-placeholder" data-role="muted">tables…</span></span><span class="pv-btn pv-btn--sec pv-btn--field" data-token="border-color-default"><span data-role="muted">Browse</span></span></div>
+                                    <div class="pv-field" data-role="ink">Owner<span class="pv-input pv-input--off" data-role="fieldDisabled"><span data-role="disabled">sys</span></span></div>
+                                    <div class="pv-field" data-role="ink">Port<span class="pv-input err" data-role="fieldError"><span data-role="ink">99999</span></span></div>
+                                    <div class="pv-fold hv" data-role="listHover"><i class="pv-fold-ic"></i><span data-role="ink">Advanced</span></div>
+                                    <div class="pv-opts">
+                                        <span class="pv-opt on" data-role="focus"><i class="pv-radio" data-token="accent-light"></i><span data-role="ink">Run on start</span></span>
+                                        <span class="pv-opt" data-token="border-color-default"><i class="pv-radio off" data-token="text-tertiary"></i><span data-role="ink">Manual</span></span>
+                                        <span class="pv-opt pv-opt--off" data-token="border-color-default"><i class="pv-radio off" data-token="text-tertiary"></i><span data-role="disabled">Scheduled</span></span>
+                                    </div>
+                                    <div class="pv-row">
+                                        <span class="pv-sw" data-role="accent"><i data-token="switch-active-thumb"></i></span><span data-role="ink">Start the service now</span>
+                                        <span class="pv-link" data-role="link">Docs</span>
+                                    </div>
+                                </div>
+                                <div class="pv-dlg-f">
+                                    <span class="pv-btn pv-btn--sec" data-token="border-color-default"><span data-role="muted">Cancel</span></span>
+                                    <span class="pv-btn pv-btn--del" data-role="delete"><span data-role="onAccent">Uninstall</span></span>
+                                    <span class="pv-btn pv-btn--pri" data-role="button"><span data-role="onAccent">Save</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- what the web UI says about state: badges, status, messages, notices, log levels, a toast -->
+                        <div class="pv-scene pv-scene--status" data-scene-of="status" data-role="surface">
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Badges</span><div class="pv-sec-i">
+                                <span class="pv-badge" data-role="success"><span data-role="onAccent">Running</span></span>
+                                <span class="pv-badge pv-badge--warning" data-role="warning"><span data-role="onAccent">Update</span></span>
+                                <span class="pv-badge pv-badge--error" data-role="error"><span data-role="onAccent">Failed</span></span>
+                                <span class="pv-badge pv-badge--info" data-role="info"><span data-role="onAccent">New</span></span>
+                                <span class="pv-badge pv-badge--neutral" data-role="neutralButton"><span data-token="text-primary">v1.13</span></span>
+                                <span class="pv-badge pv-badge--match" data-role="highlight">match</span>
+                            </div></div>
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Status</span><div class="pv-sec-i">
+                                <span class="pv-st"><i class="pv-dot" data-role="successText"></i><span data-role="ink">RUNNING</span></span>
+                                <span class="pv-st"><i class="pv-dot" data-role="errorText"></i><span data-role="ink">STOPPED</span></span>
+                                <span class="pv-st"><i class="pv-dot" data-role="statusNone"></i><span data-role="ink">UNKNOWN</span></span>
+                            </div></div>
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Messages</span><div class="pv-sec-i pv-sec-i--col">
+                                <span class="pv-msg" data-role="successText">Saved — 12 rows written</span>
+                                <span class="pv-msg" data-role="warningText">Disk 92% full</span>
+                                <span class="pv-msg" data-role="errorText">Connection refused: 127.0.0.1:5656</span>
+                                <span class="pv-msg"><span data-role="ink">See </span><span class="pv-link" data-role="link">the docs</span><span data-role="ink"> for the options</span></span>
+                            </div></div>
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Notices</span><div class="pv-sec-i pv-sec-i--col">
+                                <div class="pv-notice" data-role="warning"><b data-role="warningText">Unsaved</b><span data-role="ink">This board has changes that are not saved.</span></div>
+                                <div class="pv-notice pv-notice--error" data-role="error"><b data-role="errorText">Error</b><span data-role="ink">Table SENSOR_X was not found.</span></div>
+                            </div></div>
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Log lines</span><div class="pv-sec-i pv-sec-i--col pv-logs" data-role="consoleBodyBg">
+                                <span class="pv-log" data-role="consoleTextMuted">14:02:11 <b data-role="successText">INFO</b> query.sql · 5 rows <i class="pv-rep" data-role="success">3</i></span>
+                                <span class="pv-log" data-role="consoleTextMuted">14:02:12 <b data-role="warningText">WARN</b> slow scan on DEMO_SENSOR <i class="pv-rep pv-rep--warning" data-role="warning">2</i></span>
+                                <span class="pv-log" data-role="consoleTextMuted">14:02:13 <b data-role="errorText">ERROR</b> table not found: SENSOR_X <i class="pv-rep pv-rep--error" data-role="error">5</i></span>
+                            </div></div>
+                            <!-- a tab that failed to draw: the web UI's error screen in its place (ErrorBoundary variant tab: bg-canvas) -->
+                            <div class="pv-sec"><span class="pv-sec-t" data-role="muted">Failed tab</span><div class="pv-sec-i pv-sec-i--col pv-fail" data-role="canvas">
+                                <span data-role="ink">This tab failed to render.</span>
+                                <span data-token="text-tertiary">Cannot read properties of undefined (reading 'rows')</span>
+                                <span class="pv-fail-acts"><span class="pv-btn pv-btn--pri pv-btn--sm" data-role="button"><span data-role="onAccent">Retry</span></span><span class="pv-btn pv-btn--sec pv-btn--sm" data-token="border-color-default"><span data-role="muted">Close tab</span></span></span>
+                            </div></div>
+                            <div class="pv-toast" data-role="raised"><i class="pv-dot" data-role="successText"></i><span data-role="ink">Saved query.sql</span></div>
+                            <i class="pv-thumb pv-thumb--page" data-role="scrollbar"></i>
+                        </div>
+
+                        <!-- the sign-in page: the theme's picture (or the web UI's own) behind the sign-in box -->
+                        <div class="pv-scene pv-scene--login" data-scene-of="login">
+                            <div class="pv-login-pic" id="pv-login-pic" data-login-pic></div>
+                            <div class="pv-login-card" data-role="raised">
+                                <img class="pv-login-logo" src="login-logo.png" alt="machbase-neo" />
+                                <span class="pv-input" data-role="fieldBg"><span class="pv-placeholder" data-role="muted">User</span></span>
+                                <span class="pv-input" data-role="fieldBg"><span class="pv-placeholder" data-role="muted">Password</span></span>
+                                <span class="pv-login-remember"><i class="pv-login-box" data-role="fieldBg"></i><span data-role="ink">Remember User ID</span></span>
+                                <span class="pv-btn pv-btn--pri" data-role="button"><span data-role="onAccent">SIGN IN</span></span>
+                            </div>
+                        </div>
+
+                        <div class="pv-tag" id="pv-tag" hidden></div>
+                    </div>
+
+                    <div class="tb-checks" id="checks"></div>
+                    <details class="tb-css">
+                        <summary>Stylesheet <span class="tb-note" id="css-count"></span></summary>
+                        <pre id="css"></pre>
+                    </details>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>

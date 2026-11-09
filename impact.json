@@ -1,0 +1,1789 @@
+{
+ "measured": "2026-10-30",
+ "states": 269,
+ "tokens": {
+  "accent-dark": [
+   [
+    "New tab",
+    11
+   ]
+  ],
+  "accent-hover": [
+   [
+    "New tab",
+    66
+   ],
+   [
+    "Tab bar",
+    38
+   ],
+   [
+    "Tag hierarchy",
+    25
+   ],
+   [
+    "Pages",
+    5
+   ],
+   [
+    "Dialogs",
+    4
+   ],
+   [
+    "App Store",
+    3
+   ],
+   [
+    "Dashboards",
+    3
+   ],
+   [
+    "Data viewer",
+    1
+   ]
+  ],
+  "accent-light": [
+   [
+    "Tag Analyzer",
+    105
+   ],
+   [
+    "New tab",
+    95
+   ],
+   [
+    "Dashboards",
+    92
+   ],
+   [
+    "Inputs",
+    81
+   ],
+   [
+    "App Store",
+    72
+   ],
+   [
+    "Side panel",
+    19
+   ],
+   [
+    "Data viewer",
+    8
+   ],
+   [
+    "Buttons & badges",
+    5
+   ],
+   [
+    "Timers, bridges, shells",
+    4
+   ],
+   [
+    "Dialogs",
+    1
+   ],
+   [
+    "Shared controls",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ]
+  ],
+  "accent-main": [
+   [
+    "New tab",
+    51
+   ],
+   [
+    "Data viewer",
+    40
+   ],
+   [
+    "App Store",
+    29
+   ],
+   [
+    "Buttons & badges",
+    24
+   ],
+   [
+    "Tag hierarchy",
+    15
+   ],
+   [
+    "Side panel",
+    3
+   ],
+   [
+    "Pages",
+    3
+   ],
+   [
+    "Inputs",
+    1
+   ]
+  ],
+  "bg-backdrop": [
+   [
+    "Dialogs",
+    60
+   ]
+  ],
+  "bg-canvas": [
+   [
+    "Data viewer",
+    8
+   ],
+   [
+    "Sign-in",
+    4
+   ],
+   [
+    "Error notices",
+    4
+   ],
+   [
+    "Dashboards",
+    4
+   ],
+   [
+    "App Store",
+    3
+   ]
+  ],
+  "bg-elevated": [
+   [
+    "New tab",
+    368
+   ],
+   [
+    "Editors area",
+    256
+   ],
+   [
+    "Dialogs",
+    36
+   ],
+   [
+    "Side panel",
+    35
+   ],
+   [
+    "Inputs",
+    32
+   ],
+   [
+    "App Store",
+    25
+   ],
+   [
+    "Tag hierarchy",
+    13
+   ],
+   [
+    "Buttons & badges",
+    6
+   ],
+   [
+    "Keys & license",
+    6
+   ],
+   [
+    "Sign-in",
+    4
+   ],
+   [
+    "Error notices",
+    1
+   ],
+   [
+    "Data viewer",
+    1
+   ],
+   [
+    "Menus",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ]
+  ],
+  "bg-header": [
+   [
+    "Tab bar",
+    256
+   ],
+   [
+    "App Store",
+    20
+   ],
+   [
+    "Dialogs",
+    1
+   ]
+  ],
+  "bg-panel": [
+   [
+    "New tab",
+    15
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Dialogs",
+    1
+   ]
+  ],
+  "bg-primary": [
+   [
+    "Data viewer",
+    62
+   ],
+   [
+    "Tag Analyzer",
+    61
+   ],
+   [
+    "Worksheet",
+    9
+   ],
+   [
+    "RPC probe (dev page)",
+    8
+   ],
+   [
+    "Dialogs",
+    8
+   ],
+   [
+    "Inputs",
+    5
+   ],
+   [
+    "Tab bar",
+    3
+   ],
+   [
+    "Dashboards",
+    2
+   ]
+  ],
+  "bg-secondary": [
+   [
+    "Pages",
+    1008
+   ],
+   [
+    "Tab bar",
+    515
+   ],
+   [
+    "New tab",
+    185
+   ],
+   [
+    "Data viewer",
+    128
+   ],
+   [
+    "Dashboards",
+    28
+   ],
+   [
+    "Tag Analyzer",
+    12
+   ],
+   [
+    "Tag hierarchy",
+    8
+   ],
+   [
+    "App Store",
+    1
+   ]
+  ],
+  "border-color-active": [
+   [
+    "Console",
+    256
+   ],
+   [
+    "Pages",
+    36
+   ],
+   [
+    "App Store",
+    4
+   ]
+  ],
+  "border-color-default": [
+   [
+    "Side panel",
+    956
+   ],
+   [
+    "Pages",
+    703
+   ],
+   [
+    "Data viewer",
+    602
+   ],
+   [
+    "New tab",
+    534
+   ],
+   [
+    "Dashboards",
+    371
+   ],
+   [
+    "Buttons & badges",
+    368
+   ],
+   [
+    "Tab bar",
+    262
+   ],
+   [
+    "Console",
+    256
+   ],
+   [
+    "Tag Analyzer",
+    140
+   ],
+   [
+    "App Store",
+    81
+   ],
+   [
+    "Dialogs",
+    77
+   ],
+   [
+    "Tag hierarchy",
+    48
+   ],
+   [
+    "Inputs",
+    39
+   ],
+   [
+    "Keys & license",
+    34
+   ],
+   [
+    "Shared controls",
+    25
+   ],
+   [
+    "Worksheet",
+    25
+   ],
+   [
+    "RPC probe (dev page)",
+    7
+   ],
+   [
+    "Sign-in",
+    4
+   ],
+   [
+    "Tables",
+    4
+   ],
+   [
+    "Menus",
+    1
+   ]
+  ],
+  "border-color-focus": [
+   [
+    "Buttons & badges",
+    123
+   ],
+   [
+    "Inputs",
+    22
+   ],
+   [
+    "Pages",
+    5
+   ],
+   [
+    "Side panel",
+    2
+   ],
+   [
+    "DB pages",
+    2
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Data viewer",
+    1
+   ]
+  ],
+  "border-color-strong": [
+   [
+    "Dashboards",
+    28
+   ],
+   [
+    "Tag Analyzer",
+    26
+   ],
+   [
+    "New tab",
+    20
+   ],
+   [
+    "App Store",
+    19
+   ],
+   [
+    "Side panel",
+    3
+   ],
+   [
+    "Error notices",
+    1
+   ],
+   [
+    "Pages",
+    1
+   ]
+  ],
+  "button-danger-bg": [
+   [
+    "Pages",
+    44
+   ],
+   [
+    "Dashboards",
+    11
+   ],
+   [
+    "Buttons & badges",
+    11
+   ],
+   [
+    "Shared controls",
+    10
+   ],
+   [
+    "Error notices",
+    2
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Inputs",
+    1
+   ],
+   [
+    "SQL editor",
+    1
+   ]
+  ],
+  "button-disabled-bg": [
+   [
+    "Pages",
+    5
+   ]
+  ],
+  "button-primary-bg": [
+   [
+    "Pages",
+    61
+   ],
+   [
+    "Inputs",
+    3
+   ],
+   [
+    "App Store",
+    1
+   ]
+  ],
+  "color-black": [
+   [
+    "New tab",
+    8
+   ],
+   [
+    "Dashboards",
+    3
+   ]
+  ],
+  "color-white": [
+   [
+    "Editors area",
+    512
+   ],
+   [
+    "App Store",
+    8
+   ],
+   [
+    "Shared controls",
+    1
+   ]
+  ],
+  "console-bg": [
+   [
+    "Console",
+    256
+   ]
+  ],
+  "console-body-bg": [
+   [
+    "Pages",
+    1
+   ]
+  ],
+  "console-icon": [
+   [
+    "Console",
+    1023
+   ]
+  ],
+  "console-text-muted": [
+   [
+    "Console",
+    970
+   ]
+  ],
+  "dialog-bg": [
+   [
+    "Dialogs",
+    56
+   ]
+  ],
+  "dialog-border": [
+   [
+    "Dialogs",
+    56
+   ]
+  ],
+  "dialog-text": [
+   [
+    "Dialogs",
+    67
+   ],
+   [
+    "Tag Analyzer",
+    22
+   ],
+   [
+    "Dashboards",
+    14
+   ],
+   [
+    "Side panel",
+    10
+   ],
+   [
+    "Inputs",
+    2
+   ],
+   [
+    "Shared controls",
+    2
+   ]
+  ],
+  "dialog-text-muted": [
+   [
+    "Dialogs",
+    66
+   ],
+   [
+    "Tag Analyzer",
+    63
+   ],
+   [
+    "Shared controls",
+    24
+   ],
+   [
+    "Side panel",
+    8
+   ],
+   [
+    "New tab",
+    6
+   ],
+   [
+    "Dashboards",
+    3
+   ],
+   [
+    "Keys & license",
+    3
+   ],
+   [
+    "Timers, bridges, shells",
+    2
+   ],
+   [
+    "Pages",
+    2
+   ]
+  ],
+  "error-main": [
+   [
+    "Console",
+    15
+   ],
+   [
+    "Keys & license",
+    12
+   ],
+   [
+    "Buttons & badges",
+    2
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Dialogs",
+    1
+   ],
+   [
+    "Dashboards",
+    1
+   ],
+   [
+    "Side panel",
+    1
+   ],
+   [
+    "Timers, bridges, shells",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ],
+   [
+    "Shared controls",
+    1
+   ]
+  ],
+  "error-text": [
+   [
+    "Timers, bridges, shells",
+    19
+   ],
+   [
+    "App Store",
+    6
+   ],
+   [
+    "Dashboards",
+    4
+   ],
+   [
+    "New tab",
+    2
+   ],
+   [
+    "Keys & license",
+    2
+   ],
+   [
+    "Tag Analyzer",
+    2
+   ],
+   [
+    "Dialogs",
+    1
+   ],
+   [
+    "Side panel",
+    1
+   ],
+   [
+    "Buttons & badges",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ],
+   [
+    "SQL editor",
+    1
+   ],
+   [
+    "Inputs",
+    1
+   ]
+  ],
+  "event-match-main": [
+   [
+    "New tab",
+    36
+   ],
+   [
+    "App Store",
+    4
+   ],
+   [
+    "Dashboards",
+    1
+   ],
+   [
+    "Shared controls",
+    1
+   ]
+  ],
+  "field-bg": [
+   [
+    "Inputs",
+    427
+   ],
+   [
+    "Data viewer",
+    93
+   ],
+   [
+    "Pages",
+    60
+   ],
+   [
+    "Buttons & badges",
+    31
+   ],
+   [
+    "New tab",
+    31
+   ],
+   [
+    "DB pages",
+    19
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Error notices",
+    1
+   ]
+  ],
+  "field-border": [
+   [
+    "Inputs",
+    411
+   ],
+   [
+    "Pages",
+    55
+   ],
+   [
+    "DB pages",
+    17
+   ]
+  ],
+  "field-disabled-bg": [
+   [
+    "Inputs",
+    5
+   ]
+  ],
+  "field-icon": [
+   [
+    "Inputs",
+    186
+   ],
+   [
+    "DB pages",
+    36
+   ],
+   [
+    "New tab",
+    32
+   ],
+   [
+    "Pages",
+    30
+   ],
+   [
+    "Tag hierarchy",
+    16
+   ],
+   [
+    "Dialogs",
+    4
+   ],
+   [
+    "Side panel",
+    4
+   ],
+   [
+    "Tag Analyzer",
+    2
+   ]
+  ],
+  "field-text": [
+   [
+    "Inputs",
+    175
+   ]
+  ],
+  "gnb-active-icon": [
+   [
+    "GNB",
+    272
+   ]
+  ],
+  "gnb-bg": [
+   [
+    "GNB",
+    256
+   ]
+  ],
+  "gnb-icon": [
+   [
+    "GNB",
+    2544
+   ]
+  ],
+  "gnb-marker": [
+   [
+    "GNB",
+    256
+   ]
+  ],
+  "hover-bg": [
+   [
+    "New tab",
+    194
+   ],
+   [
+    "Dashboards",
+    60
+   ],
+   [
+    "Tag Analyzer",
+    15
+   ],
+   [
+    "Buttons & badges",
+    9
+   ],
+   [
+    "Dialogs",
+    6
+   ],
+   [
+    "Tag hierarchy",
+    2
+   ],
+   [
+    "App Store",
+    1
+   ],
+   [
+    "Data viewer",
+    1
+   ]
+  ],
+  "list-hover-bg": [
+   [
+    "Pages",
+    36
+   ],
+   [
+    "Side panel",
+    18
+   ],
+   [
+    "App Store",
+    16
+   ],
+   [
+    "Inputs",
+    4
+   ],
+   [
+    "Shared controls",
+    2
+   ]
+  ],
+  "menu-bg": [
+   [
+    "New tab",
+    43
+   ],
+   [
+    "Inputs",
+    14
+   ],
+   [
+    "Menus",
+    8
+   ],
+   [
+    "Dashboards",
+    7
+   ],
+   [
+    "App Store",
+    5
+   ],
+   [
+    "Shared controls",
+    5
+   ],
+   [
+    "Tag Analyzer",
+    5
+   ],
+   [
+    "Side panel",
+    5
+   ],
+   [
+    "Pages",
+    2
+   ],
+   [
+    "Dialogs",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ]
+  ],
+  "menu-border": [
+   [
+    "Inputs",
+    9
+   ],
+   [
+    "Menus",
+    8
+   ],
+   [
+    "Shared controls",
+    5
+   ],
+   [
+    "Dashboards",
+    4
+   ],
+   [
+    "DB pages",
+    3
+   ],
+   [
+    "Dialogs",
+    2
+   ],
+   [
+    "Side panel",
+    2
+   ],
+   [
+    "Pages",
+    2
+   ]
+  ],
+  "menu-item-hover-bg": [
+   [
+    "SQL editor",
+    13
+   ],
+   [
+    "Worksheet",
+    6
+   ],
+   [
+    "Dashboards",
+    5
+   ],
+   [
+    "Inputs",
+    2
+   ],
+   [
+    "DB pages",
+    1
+   ]
+  ],
+  "menu-item-icon": [
+   [
+    "GNB",
+    24
+   ],
+   [
+    "Tag Analyzer",
+    11
+   ],
+   [
+    "DB pages",
+    5
+   ]
+  ],
+  "menu-item-text": [
+   [
+    "Menus",
+    15
+   ],
+   [
+    "Side panel",
+    11
+   ],
+   [
+    "App Store",
+    6
+   ],
+   [
+    "DB pages",
+    3
+   ],
+   [
+    "GNB",
+    2
+   ]
+  ],
+  "neutral-main": [
+   [
+    "App Store",
+    24
+   ],
+   [
+    "Pages",
+    4
+   ]
+  ],
+  "selected-bg": [
+   [
+    "Buttons & badges",
+    81
+   ],
+   [
+    "App Store",
+    57
+   ],
+   [
+    "Tag hierarchy",
+    4
+   ],
+   [
+    "Dialogs",
+    2
+   ],
+   [
+    "Side panel",
+    2
+   ],
+   [
+    "Shared controls",
+    1
+   ]
+  ],
+  "selected-hover-bg": [
+   [
+    "Buttons & badges",
+    117
+   ],
+   [
+    "Error notices",
+    2
+   ],
+   [
+    "Data viewer",
+    1
+   ]
+  ],
+  "selected-text": [
+   [
+    "Tag hierarchy",
+    3
+   ]
+  ],
+  "side-bg": [
+   [
+    "Side panel",
+    330
+   ]
+  ],
+  "side-header-bg": [
+   [
+    "Side panel",
+    441
+   ]
+  ],
+  "side-icon": [
+   [
+    "Side panel",
+    2452
+   ]
+  ],
+  "side-selected-bg": [
+   [
+    "Side panel",
+    266
+   ]
+  ],
+  "side-text": [
+   [
+    "Side panel",
+    5162
+   ],
+   [
+    "App Store",
+    52
+   ],
+   [
+    "Keys & license",
+    9
+   ]
+  ],
+  "side-text-muted": [
+   [
+    "Side panel",
+    1224
+   ]
+  ],
+  "status-none": [
+   [
+    "Dashboards",
+    426
+   ],
+   [
+    "DB pages",
+    1
+   ]
+  ],
+  "sub-tab-active-bg": [
+   [
+    "Tag hierarchy",
+    3
+   ]
+  ],
+  "success-fill": [
+   [
+    "Pages",
+    36
+   ],
+   [
+    "Shared controls",
+    1
+   ],
+   [
+    "Side panel",
+    1
+   ]
+  ],
+  "success-main": [
+   [
+    "Console",
+    28
+   ],
+   [
+    "Buttons & badges",
+    6
+   ],
+   [
+    "App Store",
+    4
+   ],
+   [
+    "Tag hierarchy",
+    2
+   ],
+   [
+    "Dashboards",
+    1
+   ]
+  ],
+  "switch-active-thumb": [
+   [
+    "Pages",
+    7
+   ]
+  ],
+  "switch-bg": [
+   [
+    "Pages",
+    14
+   ]
+  ],
+  "switch-border": [
+   [
+    "Pages",
+    21
+   ]
+  ],
+  "switch-thumb": [
+   [
+    "Pages",
+    14
+   ]
+  ],
+  "tabbar-active-text": [
+   [
+    "Tab bar",
+    357
+   ],
+   [
+    "Keys & license",
+    12
+   ],
+   [
+    "Shared controls",
+    8
+   ]
+  ],
+  "tabbar-bg": [
+   [
+    "Tab bar",
+    409
+   ]
+  ],
+  "tabbar-inactive-text": [
+   [
+    "Tab bar",
+    153
+   ]
+  ],
+  "tabbar-marker": [
+   [
+    "Tab bar",
+    256
+   ]
+  ],
+  "table-header-bg": [
+   [
+    "Tables",
+    326
+   ],
+   [
+    "New tab",
+    7
+   ]
+  ],
+  "table-header-text": [
+   [
+    "Tables",
+    366
+   ],
+   [
+    "New tab",
+    7
+   ]
+  ],
+  "table-stripe-bg": [
+   [
+    "Tables",
+    120
+   ]
+  ],
+  "table-text": [
+   [
+    "Tables",
+    943
+   ],
+   [
+    "New tab",
+    28
+   ],
+   [
+    "Side panel",
+    6
+   ]
+  ],
+  "text-disabled": [
+   [
+    "Buttons & badges",
+    1178
+   ],
+   [
+    "Tag Analyzer",
+    1031
+   ],
+   [
+    "Dashboards",
+    1007
+   ],
+   [
+    "Tables",
+    533
+   ],
+   [
+    "Side panel",
+    294
+   ],
+   [
+    "Editors area",
+    258
+   ],
+   [
+    "Worksheet",
+    189
+   ],
+   [
+    "SQL editor",
+    182
+   ],
+   [
+    "Tag hierarchy",
+    128
+   ],
+   [
+    "Shared controls",
+    95
+   ],
+   [
+    "TQL",
+    91
+   ],
+   [
+    "New tab",
+    78
+   ],
+   [
+    "App Store",
+    56
+   ],
+   [
+    "Dialogs",
+    56
+   ],
+   [
+    "Timers, bridges, shells",
+    54
+   ],
+   [
+    "Inputs",
+    26
+   ],
+   [
+    "DB pages",
+    24
+   ],
+   [
+    "Keys & license",
+    12
+   ],
+   [
+    "Pages",
+    9
+   ],
+   [
+    "RPC probe (dev page)",
+    3
+   ],
+   [
+    "Data viewer",
+    1
+   ]
+  ],
+  "text-muted": [
+   [
+    "New tab",
+    385
+   ],
+   [
+    "Tag hierarchy",
+    50
+   ],
+   [
+    "Tag Analyzer",
+    47
+   ],
+   [
+    "Keys & license",
+    41
+   ],
+   [
+    "Inputs",
+    32
+   ],
+   [
+    "SQL editor",
+    29
+   ],
+   [
+    "Tab bar",
+    18
+   ],
+   [
+    "Tables",
+    15
+   ],
+   [
+    "Pages",
+    15
+   ],
+   [
+    "DB pages",
+    9
+   ],
+   [
+    "Shared controls",
+    8
+   ],
+   [
+    "App Store",
+    7
+   ],
+   [
+    "Dialogs",
+    6
+   ],
+   [
+    "Side panel",
+    6
+   ],
+   [
+    "Dashboards",
+    3
+   ]
+  ],
+  "text-on-accent": [
+   [
+    "Pages",
+    132
+   ],
+   [
+    "New tab",
+    80
+   ],
+   [
+    "App Store",
+    53
+   ],
+   [
+    "Side panel",
+    20
+   ],
+   [
+    "Buttons & badges",
+    17
+   ],
+   [
+    "Data viewer",
+    15
+   ],
+   [
+    "Tag hierarchy",
+    11
+   ],
+   [
+    "Dashboards",
+    6
+   ],
+   [
+    "Error notices",
+    3
+   ],
+   [
+    "Inputs",
+    3
+   ],
+   [
+    "Console",
+    1
+   ]
+  ],
+  "text-primary": [
+   [
+    "New tab",
+    1792
+   ],
+   [
+    "Pages",
+    950
+   ],
+   [
+    "Data viewer",
+    392
+   ],
+   [
+    "Inputs",
+    259
+   ],
+   [
+    "Buttons & badges",
+    208
+   ],
+   [
+    "SQL editor",
+    171
+   ],
+   [
+    "App Store",
+    162
+   ],
+   [
+    "Side panel",
+    144
+   ],
+   [
+    "Tag Analyzer",
+    130
+   ],
+   [
+    "Shared controls",
+    129
+   ],
+   [
+    "Dashboards",
+    77
+   ],
+   [
+    "Timers, bridges, shells",
+    59
+   ],
+   [
+    "TQL",
+    58
+   ],
+   [
+    "Console",
+    36
+   ],
+   [
+    "Keys & license",
+    25
+   ],
+   [
+    "Tab bar",
+    18
+   ],
+   [
+    "Dialogs",
+    14
+   ],
+   [
+    "Worksheet",
+    13
+   ],
+   [
+    "Error notices",
+    10
+   ],
+   [
+    "Tag hierarchy",
+    9
+   ],
+   [
+    "DB pages",
+    7
+   ]
+  ],
+  "text-secondary": [
+   [
+    "Inputs",
+    320
+   ],
+   [
+    "New tab",
+    288
+   ],
+   [
+    "Tag Analyzer",
+    254
+   ],
+   [
+    "Dashboards",
+    234
+   ],
+   [
+    "Data viewer",
+    154
+   ],
+   [
+    "Dialogs",
+    77
+   ],
+   [
+    "Tag hierarchy",
+    56
+   ],
+   [
+    "Keys & license",
+    54
+   ],
+   [
+    "Side panel",
+    28
+   ],
+   [
+    "Shared controls",
+    25
+   ],
+   [
+    "Pages",
+    15
+   ],
+   [
+    "App Store",
+    12
+   ],
+   [
+    "RPC probe (dev page)",
+    10
+   ],
+   [
+    "Buttons & badges",
+    5
+   ]
+  ],
+  "text-tertiary": [
+   [
+    "New tab",
+    1329
+   ],
+   [
+    "Pages",
+    213
+   ],
+   [
+    "Inputs",
+    193
+   ],
+   [
+    "Data viewer",
+    151
+   ],
+   [
+    "App Store",
+    121
+   ],
+   [
+    "Tag hierarchy",
+    108
+   ],
+   [
+    "Tag Analyzer",
+    107
+   ],
+   [
+    "Dashboards",
+    87
+   ],
+   [
+    "Keys & license",
+    28
+   ],
+   [
+    "Dialogs",
+    26
+   ],
+   [
+    "DB pages",
+    21
+   ],
+   [
+    "Error notices",
+    6
+   ],
+   [
+    "Side panel",
+    4
+   ],
+   [
+    "Timers, bridges, shells",
+    2
+   ],
+   [
+    "RPC probe (dev page)",
+    1
+   ]
+  ],
+  "toolbar-hover-bg": [
+   [
+    "Dashboards",
+    9
+   ],
+   [
+    "Data viewer",
+    8
+   ],
+   [
+    "Side panel",
+    2
+   ]
+  ],
+  "tooltip-bg": [
+   [
+    "Inputs",
+    3
+   ]
+  ],
+  "tooltip-text": [
+   [
+    "Inputs",
+    1
+   ]
+  ],
+  "warning-main": [
+   [
+    "Tag Analyzer",
+    176
+   ],
+   [
+    "App Store",
+    37
+   ],
+   [
+    "Buttons & badges",
+    20
+   ],
+   [
+    "Dashboards",
+    7
+   ],
+   [
+    "Shared controls",
+    6
+   ],
+   [
+    "Error notices",
+    4
+   ],
+   [
+    "Keys & license",
+    4
+   ],
+   [
+    "Side panel",
+    2
+   ],
+   [
+    "SQL editor",
+    1
+   ],
+   [
+    "DB pages",
+    1
+   ],
+   [
+    "Worksheet",
+    1
+   ]
+  ]
+ },
+ "note": "2026-11-03: names the web UI no longer has folded into the token that draws those places now (dropdown-* → menu-*, bg-input → bg-hover-block, text-row-number → table-header-text …), not re-measured. 2026-11-03(2): error-light → error-text, switch-bg-active → btn-create, bg-tab-active → bg-secondary, text-hint → text-tertiary — not re-measured; text-disabled's icon, text and dot places moved to text-icon, text-muted and status-none in the web UI, still counted under text-disabled here. 2026-11-09: tokens renamed, counts not measured again: bg-hover-light → list-hover-bg, bg-hover-block → toolbar-hover-bg (each also lost places to the other hovers), bg-tab-hover → tabbar-hover-bg, border-color-light → border-color-default."
+}

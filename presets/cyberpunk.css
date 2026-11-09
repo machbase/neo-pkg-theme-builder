@@ -1,0 +1,99 @@
+/*
+ * cyberpunk preset of neo-pkg-theme-builder (was the neo-pkg-theme-cyberpunk package) — night-city colors for the machbase-neo web UI.
+ *
+ * Red-black surfaces, neon red frames and lines, cyan accents, teal selection and a red glow
+ * for raised parts. Every variable it leaves out keeps the built-in dark value.
+ */
+:root {
+    /* Surfaces */
+    --neo-bg-primary: #140a0d;
+    --neo-bg-secondary: #1b0c11;
+    --neo-bg-header: #140a0d;
+    --neo-bg-elevated: #2b131d;
+    --neo-bg-panel: #1b0c11;
+    --neo-sub-tab-active-bg: #2a121b;
+    --neo-tabbar-hover-bg: rgba(255, 42, 74, 0.22);
+    --neo-hover-bg: rgba(45, 226, 230, 0.14);
+    --neo-table-row-hover-bg: #6a263c;
+    --neo-list-hover-bg: rgba(45, 226, 230, 0.21);
+    --neo-toolbar-hover-bg: rgba(45, 226, 230, 0.21);
+    --neo-selected-bg: #1d5b60;
+    --neo-selected-hover-bg: #247179;
+
+    /* Text */
+    --neo-text-primary: #f4eaec;
+    --neo-text-secondary: #e6d0d5;
+    --neo-text-tertiary: #4fd3d8;
+    --neo-text-disabled: #926d77; --neo-text-icon: #926d77;
+    --neo-text-muted: #9c7982;
+    --neo-selected-text: #2de2e6;
+    /* Text on neon fills (buttons, selected chips, badges) is dark, not light. */
+    --neo-text-on-accent: #140a0d;
+
+    /* Lines: neon red */
+    --neo-border-color-default: rgba(255, 42, 74, 0.7);
+    --neo-field-border: rgba(255, 42, 74, 0.4);
+    --neo-border-color-strong: #ff2a4a;
+    --neo-border-color-focus: #2de2e6;
+    --neo-border-color-active: #2de2e6;
+
+    /* Accent: cyan / teal */
+    --neo-accent-main: #0f9aa0;
+    --neo-accent-hover: #14b8bf;
+    --neo-accent-light: #2de2e6; --neo-accent-text: #2de2e6;
+    --neo-accent-dark: #0b7276;
+
+    /* Signals */
+    --neo-success-main: #39ff9c;
+    --neo-success-text: #7dffc0;
+    --neo-error-main: #ff2a4a;
+    --neo-error-text: #ff5c76;
+    --neo-warning-main: #ffb627; --neo-warning-text: #ffb627;
+    --neo-info-main: #2de2e6;
+    --neo-event-match-main: #f6f740;
+
+    /* Buttons */
+    --neo-button-danger-bg: #ff2a4a;
+    --neo-button-primary-bg: #0f9aa0;
+    --neo-neutral-main: #5b2a37;
+    --neo-success-fill: #14b8bf;
+    --neo-button-disabled-bg: #4a2a33;
+
+    /* Status */
+    --neo-status-none: #8a6870;
+
+    /* Scrollbar */
+    --neo-scrollbar-thumb: rgba(255, 42, 74, 0.55);
+    --neo-scrollbar-hover-thumb: #ff2a4a;
+    --neo-scrollbar-border: #ff2a4a;
+    --neo-scrollbar-track-bg: #140a0d;
+
+    /* Switch */
+    --neo-switch-bg: rgba(255, 42, 74, 0.32);
+    --neo-switch-hover-bg: rgba(255, 42, 74, 0.32);
+    --neo-switch-thumb: #dcc3c9;
+    --neo-switch-active-thumb: #f4eaec;
+    --neo-switch-border: rgba(255, 42, 74, 0.45);
+
+    /* Menus */
+    --neo-menu-shadow: 0 0 14px rgba(255, 42, 74, 0.35);
+    --neo-menu-bg: #361822;
+    --neo-menu-border: #ff2a4a;
+    --neo-menu-item-hover-bg: #582032;
+    --neo-menu-item-icon: #2de2e6;
+    --neo-dialog-border: #ff2a4a; --neo-bg-backdrop: rgba(8, 3, 5, 0.72);
+
+    /* Tooltips */
+    --neo-tooltip-bg: #140a0d;
+    --neo-tooltip-text: #2de2e6;
+    --neo-tooltip-border: #ff2a4a;
+
+    /* Glow for raised parts */
+    --neo-shadow-sm: 0 0 4px rgba(255, 42, 74, 0.3);
+    --neo-shadow-md: 0 0 8px rgba(255, 42, 74, 0.35);
+    --neo-shadow-lg: 0 0 12px rgba(255, 42, 74, 0.4);
+    --neo-shadow-xl: 0 0 18px rgba(255, 42, 74, 0.45);
+
+    /* Easter egg: the pointer leaves neon after-images (a built-in effect the theme switches on) */
+    --neo-fx-cursor: sandevistan;
+}

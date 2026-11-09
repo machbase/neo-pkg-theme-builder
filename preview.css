@@ -1,0 +1,1477 @@
+/*
+ * The preview: neo-web's workspace drawn with the same variables the real components read (measured
+ * on the web UI, not guessed — see the README). builder.js sets every variable on #pv. A part of the
+ * screen reads its own token first and the shared one it falls back to, as the web UI does
+ * (tokens/_colors.scss, Areas). Code in the editor is colored by the scheme, as Monaco's base theme is.
+ */
+.pv {
+    flex-shrink: 0;
+    --pv-ln: #858585;
+    --pv-kw: #569cd6;
+    --pv-str: #ce9178;
+    --pv-num: #b5cea8;
+    --pv-code: #d4d4d4;
+    position: relative;
+    height: 520px;
+    overflow: hidden;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-primary);
+    color: var(--neo-text-primary);
+    font: 12px/1.4 Pretendard, -apple-system, 'Segoe UI', sans-serif;
+    user-select: none;
+}
+.pv[data-light] {
+    --pv-ln: #237893;
+    --pv-kw: #0000ff;
+    --pv-str: #a31515;
+    --pv-num: #098658;
+    --pv-code: #000000;
+}
+.pv * {
+    box-sizing: border-box;
+}
+.pv-grow {
+    flex: 1;
+}
+
+/* the scenes: one on screen at a time (the tabs over the preview, or the color picked in the list) */
+.pv-scene {
+    position: absolute;
+    inset: 0;
+    display: none;
+}
+.pv[data-scene='work'] .pv-scene--work,
+.pv[data-scene='explorer'] .pv-scene--explorer,
+.pv[data-scene='newtab'] .pv-scene--newtab {
+    display: grid;
+    grid-template-columns: 44px 210px minmax(0, 1fr);
+}
+/* a page with no console under it */
+.pv-main.pv-main--page {
+    grid-template-rows: auto minmax(0, 1fr);
+}
+.pv[data-scene='dialogs'] .pv-scene--dialogs {
+    display: block;
+}
+.pv[data-scene='status'] .pv-scene--status {
+    display: flex;
+}
+
+/* GNB */
+.pv-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 0;
+    background: var(--neo-gnb-bg, var(--neo-bg-primary));
+}
+.pv-ri {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+    border-left: 2px solid transparent;
+    color: var(--neo-gnb-icon, var(--neo-text-icon));
+}
+/* under the pointer: every part's hover is Hover's step over its own background */
+.pv-ri.hv {
+    margin: 0 4px;
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    background: var(--neo-gnb-hover-bg, var(--neo-hover-bg));
+    color: var(--neo-gnb-active-icon, var(--neo-text-primary));
+}
+.pv-ri.on {
+    color: var(--neo-gnb-active-icon, var(--neo-text-primary));
+}
+/* the active item's left edge (GNB .gnb__item__wrapper--selected: border-left in gnb-marker), drawn as
+   its own element so the Active indicator is the line, not the icon beside it */
+.pv-ri-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -2px;
+    width: 2px;
+    background: var(--neo-gnb-marker, var(--neo-accent-main));
+}
+.pv-ic {
+    position: relative;
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1.6px solid currentColor;
+    border-radius: 3px;
+}
+.pv-ic-files::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 7px;
+    height: 1.6px;
+    background: currentColor;
+    box-shadow: 0 4px 0 currentColor, 0 8px 0 currentColor;
+}
+.pv-ic-db {
+    border-radius: 50% / 22%;
+}
+.pv-ic-term::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    width: 6px;
+    height: 1.6px;
+    background: currentColor;
+}
+.pv-ic-clock,
+.pv-ic-gear {
+    border-radius: 50%;
+}
+.pv-ic-gear {
+    border-style: dotted;
+    border-width: 2.4px;
+}
+.pv-ic-apps {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    box-shadow: inset 7px 0 0 -5.4px currentColor, inset 0 7px 0 -5.4px currentColor;
+}
+
+/* side panel */
+.pv-side {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-left: 1px solid var(--neo-border-color-default);
+    /* the split line between the side panel and the editors */
+    border-right: 1px solid var(--neo-border-color-default);
+    background: var(--neo-side-bg, var(--neo-bg-panel));
+    color: var(--neo-side-text, var(--neo-text-primary));
+}
+/* as tall as the tab bar beside it, so the two lines under them meet (the web UI's are 40px both) */
+.pv-ver {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 36px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    color: var(--neo-side-text, var(--neo-text-secondary));
+    font-size: 11.5px;
+    white-space: nowrap;
+}
+.pv-ver span + span {
+    color: var(--neo-side-text-muted, var(--neo-text-muted));
+    font-family: D2Coding, ui-monospace, Menlo, monospace;
+}
+/* as tall as the editor's toolbar beside it, so the line under the first one meets the toolbar's
+   (one height for both: the lines either side of the split meet, not step) */
+.pv-sh {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    margin-top: 2px;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    background: var(--neo-side-header-bg, var(--neo-bg-header));
+    color: var(--neo-side-text, var(--neo-text-primary));
+    font-size: 11px;
+}
+/* the first sits right under the version line, as the web UI's Open editors does: no gap row between */
+.pv-ver + .pv-sh {
+    margin-top: 0;
+}
+/* the split line between Open editors and Explorer */
+.pv-sh ~ .pv-sh {
+    border-top: 1px solid var(--neo-border-color-default);
+}
+.pv-sh::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    margin-top: -3px;
+    border-right: 1.3px solid currentColor;
+    border-bottom: 1.3px solid currentColor;
+    transform: rotate(45deg);
+}
+.pv-it {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 14px;
+    color: var(--neo-side-text, var(--neo-text-primary));
+    white-space: nowrap;
+}
+.pv-it--in {
+    padding-left: 28px;
+}
+/* the selected row (a selection) and the row under the pointer (a hover): one gray on the dark screen, each its own color under a theme */
+.pv-it--open {
+    background: var(--neo-side-selected-bg, var(--neo-selected-bg));
+}
+.pv-it.hv,
+.pv-it:hover {
+    background: var(--neo-side-hover-bg, var(--neo-list-hover-bg));
+}
+/* file icons: neo-web's icon-* tokens (a light theme sets each as deep as it needs) */
+.pv-fi {
+    flex-shrink: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+}
+.pv-fi--dir {
+    height: 9px;
+    border-radius: 1px 3px 2px 2px;
+    background: var(--neo-icon-folder, #ffca28);
+}
+.pv-fi--sql {
+    background: var(--neo-icon-sql, #ffca28);
+    border-radius: 50% / 30%;
+}
+.pv-fi--tql {
+    background: var(--neo-icon-tql, #4caf50);
+}
+.pv-fi--dsh {
+    background: var(--neo-icon-dsh, #fc7676);
+    border-radius: 50%;
+}
+
+/* tab bar */
+.pv-main {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) 118px;
+    min-width: 0;
+}
+.pv-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+    height: 36px;
+    padding: 4px 4px 0;
+    background: var(--neo-tabbar-bg, var(--neo-bg-primary));
+}
+.pv-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 120px;
+    padding: 7px 14px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    color: var(--neo-tabbar-inactive-text, var(--neo-text-tertiary));
+    white-space: nowrap;
+}
+.pv-tab + .pv-tab::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: -1px;
+    width: 1px;
+    background: var(--neo-border-color-default);
+}
+.pv-tab.on {
+    border-color: var(--neo-border-color-default);
+    background: var(--neo-tabbar-active-bg, var(--neo-bg-secondary));
+    color: var(--neo-tabbar-active-text, var(--neo-text-primary));
+}
+.pv-tab.on + .pv-tab::before {
+    display: none;
+}
+.pv-tab-line {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    height: 1px;
+    background: var(--neo-tabbar-marker, var(--neo-accent-main));
+}
+.pv-tab.hv {
+    background: var(--neo-tabbar-hover-bg, var(--neo-hover-bg));
+}
+
+/* page */
+.pv-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+    background: var(--neo-bg-secondary);
+}
+.pv-ph {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 28px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    /* the header row under the open tab: the tab's surface (neo-web Page header: tabbar-active-bg) */
+    background: var(--neo-tabbar-active-bg, var(--neo-bg-secondary));
+}
+.pv-tool {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--neo-text-icon);
+    border-radius: 3px;
+}
+.pv-tool--run {
+    width: 0;
+    height: 0;
+    border: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 9px solid var(--neo-text-icon);
+    border-radius: 0;
+}
+.pv-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    min-height: 0;
+}
+.pv-code {
+    position: relative;
+    padding: 8px 0;
+    border-right: 1px solid var(--neo-border-color-default);
+    background: var(--neo-bg-secondary);
+    color: var(--pv-code);
+    font: 12px/1.7 D2Coding, ui-monospace, Menlo, monospace;
+    white-space: nowrap;
+}
+.pv-ln {
+    display: inline-block;
+    width: 28px;
+    margin-right: 12px;
+    color: var(--pv-ln);
+    text-align: right;
+}
+.pv-kw {
+    color: var(--pv-kw);
+}
+.pv-str {
+    color: var(--pv-str);
+}
+.pv-num {
+    color: var(--pv-num);
+}
+.pv-code-note {
+    position: absolute;
+    right: 8px;
+    bottom: 6px;
+    margin: 0;
+    color: var(--pv-ln);
+    font: 10px Pretendard, sans-serif;
+    opacity: 0.7;
+}
+.pv-res {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--neo-bg-secondary);
+}
+.pv-subtabs {
+    display: flex;
+    gap: 16px;
+    padding: 0 14px;
+    /* the result tabs sit on the content (the page header), not on the frame */
+    background: var(--neo-bg-secondary);
+}
+.pv-sub {
+    position: relative;
+    padding: 7px 2px;
+    color: var(--neo-text-muted);
+    font-size: 11px;
+}
+.pv-sub.on {
+    color: var(--neo-text-primary);
+}
+.pv-sub-line {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--neo-accent-hover);
+}
+.pv-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font: 11.5px D2Coding, ui-monospace, Menlo, monospace;
+}
+.pv-grid th {
+    padding: 5px 8px;
+    background: var(--neo-table-header-bg, var(--neo-bg-elevated));
+    color: var(--neo-table-header-text, var(--neo-text-muted));
+    font: 600 10.5px Pretendard, sans-serif;
+    text-align: left;
+}
+.pv-grid td {
+    padding: 4px 8px;
+    color: var(--neo-text-secondary);
+}
+.pv-grid td:first-child,
+.pv-grid th:first-child {
+    width: 30px;
+    color: var(--neo-table-header-text, var(--neo-text-muted));
+}
+/* the row numbers: their own color, the column names' unless the theme sets it (neo-web Table) */
+.pv-grid td:first-child {
+    color: var(--neo-table-row-number-text, var(--neo-table-header-text, var(--neo-text-muted)));
+}
+.pv-grid tr.odd td {
+    background: var(--neo-table-stripe-bg, var(--neo-bg-elevated));
+}
+/* a row under the pointer (the preview shows one held there) */
+.pv-grid tr.hv td {
+    background: var(--neo-table-row-hover-bg, var(--neo-list-hover-bg));
+}
+.pv-grid tr.sel td {
+    background: var(--neo-table-row-selected-bg, var(--neo-selected-bg));
+    color: var(--neo-selected-text);
+}
+.pv-meta {
+    margin-top: auto;
+    padding: 6px 10px;
+    color: var(--neo-text-muted);
+    font-size: 11px;
+}
+.pv-thumb {
+    position: absolute;
+    top: 64px;
+    right: 3px;
+    width: 6px;
+    height: 46px;
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: var(--neo-scrollbar-thumb);
+}
+
+/* console */
+.pv-console {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--neo-border-color-default);
+    color: var(--neo-console-text, var(--neo-text-primary));
+    font: 11.5px D2Coding, ui-monospace, Menlo, monospace;
+}
+/* the log body under the header: the console's Background (console/index.scss) shows only here */
+.pv-cbody {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 3px;
+    background: var(--neo-console-body-bg, var(--neo-bg-secondary));
+}
+.pv-ch {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    background: var(--neo-console-bg, var(--neo-bg-primary));
+}
+.pv-ctab {
+    position: relative;
+    display: inline-block;
+    padding: 7px 2px;
+    color: var(--neo-console-tab-text, var(--neo-console-text-muted, var(--neo-text-secondary)));
+    font: 12px Pretendard, sans-serif;
+}
+.pv-ctab i {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--neo-console-marker, var(--neo-border-color-active));
+}
+.pv-log {
+    padding: 0 14px;
+    color: var(--neo-console-text-muted, var(--neo-text-secondary));
+}
+/* the selected task's lines: a selection (console/index.tsx), the console text on it */
+.pv-log--sel {
+    background: var(--neo-console-selected-bg, var(--neo-selected-bg));
+    color: var(--neo-console-text, var(--neo-text-primary));
+}
+/* small buttons on a bar: the side panel's section bar, the console bar, an input's search icon */
+.pv-tb,
+.pv-cb {
+    display: inline-flex;
+    padding: 2px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+}
+.pv-tb.hv {
+    background: var(--neo-toolbar-hover-bg, var(--neo-hover-bg));
+}
+/* a toolbar button that is switched on: the web UI's IconButton (active-bg, active-text) */
+.pv-tb.on {
+    background: var(--neo-active-bg, var(--neo-selected-bg));
+}
+.pv-tb.on .pv-tool {
+    border-color: var(--neo-active-text, var(--neo-selected-text));
+}
+.pv-cb.hv {
+    background: var(--neo-console-hover-bg, var(--neo-hover-bg));
+}
+.pv-acts {
+    display: inline-flex;
+    gap: 7px;
+    margin-left: auto;
+}
+.pv-ico {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border: 1.5px solid currentColor;
+    border-radius: 2px;
+}
+.pv-ico--round {
+    border-radius: 50%;
+}
+.pv-ico[data-role='sideIcon'] {
+    color: var(--neo-side-icon, var(--neo-text-icon));
+}
+.pv-ico[data-role='consoleIcon'] {
+    color: var(--neo-console-icon, var(--neo-text-icon));
+}
+.pv-ico[data-role='fieldIcon'] {
+    margin-right: 6px;
+    color: var(--neo-field-icon, var(--neo-text-tertiary));
+    vertical-align: -1px;
+}
+.pv-log b {
+    font-weight: 600;
+}
+/* a level's word is text: the signals' -text colors (the console's logLevelColor) */
+.pv-log b[data-role='successText'] {
+    color: var(--neo-success-text);
+}
+.pv-log b[data-role='warningText'] {
+    color: var(--neo-warning-text);
+}
+.pv-log b[data-role='errorText'] {
+    color: var(--neo-error-text);
+}
+
+/* dialogs and menus: a dialog over the page, the backdrop between */
+.pv-scene--dialogs {
+    background: var(--neo-bg-secondary);
+}
+.pv-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--neo-bg-backdrop);
+}
+.pv-menu {
+    position: absolute;
+    top: 40px;
+    left: 28px;
+    width: 160px;
+    padding: 4px 0;
+    border: 1px solid var(--neo-menu-border);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-menu-bg);
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.6);
+    color: var(--neo-text-primary);
+}
+.pv-mi {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+}
+.pv-mi.hv {
+    background: var(--neo-menu-item-hover-bg);
+}
+.pv-mic {
+    width: 11px;
+    height: 11px;
+    border: 1.4px solid var(--neo-menu-item-icon);
+    border-radius: 2px;
+}
+.pv-dlg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 460px;
+    transform: translate(-34%, -50%);
+    border: 1px solid var(--neo-dialog-border);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-dialog-bg, var(--neo-bg-elevated));
+    color: var(--neo-text-primary);
+}
+.pv-dlg-h {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    /* the title has its own color (Modal __title); every other word in a dialog is the page's text */
+    color: var(--neo-dialog-title-text, var(--neo-text-primary));
+    font-weight: 600;
+    font-size: 14px;
+}
+.pv-dlg-b {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+}
+.pv-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--neo-text-primary);
+}
+/* an input as the web UI draws it (the interactive-field mixin): its own background and border, the focus ring when focused */
+.pv-input {
+    flex: 1;
+    padding: 5px 8px;
+    border: 1px solid var(--neo-field-border, var(--neo-border-color-default));
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-field-bg, var(--neo-bg-elevated));
+    color: var(--neo-text-primary);
+}
+/* a placeholder: Sub text (text-muted), as neo-web draws them */
+.pv-placeholder {
+    color: var(--neo-text-muted);
+}
+.pv-input.focus {
+    border-color: var(--neo-border-color-focus);
+}
+.pv-input.err {
+    border-color: var(--neo-field-error-border, var(--neo-error-main));
+}
+/* a folding section's header under the pointer (the web UI's Page.Collapse: list-hover-bg) */
+.pv-fold {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    color: var(--neo-text-primary);
+}
+.pv-fold.hv {
+    background: var(--neo-list-hover-bg, var(--neo-hover-bg));
+}
+.pv-fold-ic {
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid var(--neo-text-icon);
+    border-bottom: 1.5px solid var(--neo-text-icon);
+    transform: rotate(45deg);
+}
+.pv-opts {
+    display: flex;
+    gap: 8px;
+}
+.pv-opt {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    color: var(--neo-text-primary);
+}
+.pv-opt.on {
+    border-color: var(--neo-border-color-focus);
+}
+.pv-radio {
+    width: 12px;
+    height: 12px;
+    border: 4px solid var(--neo-accent-light);
+    border-radius: 50%;
+}
+.pv-radio.off {
+    border: 1px solid var(--neo-text-tertiary);
+}
+.pv-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    color: var(--neo-text-primary);
+}
+.pv-sw {
+    position: relative;
+    width: 28px;
+    height: 15px;
+    border: 1px solid var(--neo-switch-border);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-accent-main);
+}
+.pv-sw i {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--neo-switch-active-thumb);
+}
+.pv-st {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font: 600 10px D2Coding, ui-monospace, monospace;
+}
+.pv-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.pv-dot[data-role='successText'] {
+    background: var(--neo-success-text);
+}
+.pv-dot[data-role='errorText'] {
+    background: var(--neo-error-text);
+}
+.pv-dot[data-role='statusNone'] {
+    background: var(--neo-status-none);
+}
+.pv-link {
+    color: var(--neo-accent-text);
+    text-decoration: underline;
+    font-size: 11px;
+}
+.pv-opt--off [data-role='disabled'] {
+    color: var(--neo-text-disabled);
+}
+.pv-dlg-f {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--neo-border-color-default);
+}
+.pv-btn {
+    padding: 6px 14px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    font-weight: 600;
+    font-size: 12px;
+}
+/* Cancel, Browse, Customize: the design-system Button's secondary — no fill, Sub text (text-muted), the default border */
+.pv-btn--sec {
+    padding: 5px 13px;
+    border: 1px solid var(--neo-border-color-default);
+    color: var(--neo-text-muted);
+}
+.pv-btn--sec.pv-btn--field {
+    padding: 4px 10px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+/* App Store's Uninstall: the layer's fill, a Borders outline (AppStore item.scss .app-store-item-text-action) */
+.pv-btn--line {
+    padding: 4px 10px;
+    box-shadow: inset 0 0 0 1px var(--neo-border-color-strong);
+    background: var(--neo-bg-elevated);
+    font-size: 11px;
+    white-space: nowrap;
+}
+.pv-btn--del {
+    background: var(--neo-button-danger-bg);
+    color: var(--neo-text-on-accent);
+}
+.pv-btn--pri {
+    background: var(--neo-button-primary-bg);
+    color: var(--neo-text-on-accent);
+}
+/* under the help icon it explains, pointing at it (the web UI's tooltips have an arrow) */
+.pv-tip {
+    position: absolute;
+    top: 10px;
+    right: 44px;
+    padding: 4px 8px;
+    border: 1px solid var(--neo-tooltip-border);
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: var(--neo-tooltip-bg);
+    color: var(--neo-tooltip-text);
+    font-size: 11px;
+}
+.pv-tip::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 7px;
+    height: 7px;
+    margin-top: -4px;
+    border-top: 1px solid var(--neo-tooltip-border);
+    border-right: 1px solid var(--neo-tooltip-border);
+    background: var(--neo-tooltip-bg);
+    transform: rotate(45deg);
+}
+.pv-toast {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+    box-shadow: var(--neo-shadow-xl);
+    color: var(--neo-text-primary);
+}
+
+/* click-to-edit */
+.pv [data-role],
+.pv [data-token] {
+    cursor: pointer;
+}
+.pv .pv-hot {
+    outline: 2px solid #ffcc00;
+    outline-offset: -2px;
+}
+/* what the role under the pointer changes; what a change just changed */
+.pv .pv-affected {
+    outline: 2px dashed #ff3bd4;
+    outline-offset: -2px;
+}
+.pv .pv-changed {
+    animation: pv-changed 1.4s ease-out;
+}
+@keyframes pv-changed {
+    0%,
+    35% {
+        outline: 3px solid #ffcc00;
+        outline-offset: -3px;
+    }
+    100% {
+        outline: 3px solid transparent;
+        outline-offset: -3px;
+    }
+}
+.pv-tag {
+    position: absolute;
+    z-index: 5;
+    padding: 3px 8px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: rgba(20, 20, 20, 0.92);
+    color: #ffffff;
+    font: 600 11px Pretendard, -apple-system, sans-serif;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* the cursor effect's layer (cursor-fx.js; there only while the theme switches it on) */
+.pv-fx {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* the help icon a tooltip explains */
+.pv-help {
+    display: grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    border: 1.4px solid var(--neo-text-icon);
+    border-radius: 50%;
+    color: var(--neo-text-icon);
+    font-size: 10px;
+    font-weight: 700;
+}
+/* a disabled input: its background and the disabled text */
+.pv-input--off {
+    background: var(--neo-field-disabled-bg, var(--neo-bg-primary));
+    color: var(--neo-text-disabled);
+}
+
+/* status and signals: what the web UI says about state */
+.pv-scene--status {
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 22px;
+    background: var(--neo-bg-secondary);
+    font-size: 12px;
+}
+.pv-sec {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: baseline;
+}
+.pv-sec-i {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+.pv-sec-i--col {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+}
+.pv-sec-t {
+    color: var(--neo-text-muted);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+/* a badge is a fill that carries the text-on-accent (the neutral one, the page's text) */
+.pv-badge {
+    padding: 2px 9px;
+    border-radius: 7px;
+    background: var(--neo-success-main);
+    color: var(--neo-text-on-accent);
+    font-size: 11px;
+    font-weight: 600;
+}
+.pv-badge--warning {
+    background: var(--neo-warning-main);
+}
+.pv-badge--error {
+    background: var(--neo-error-main);
+}
+.pv-badge--info {
+    background: var(--neo-info-main);
+}
+.pv-badge--neutral {
+    background: var(--neo-neutral-main);
+    color: var(--neo-text-primary);
+}
+/* the highlight carries dark text in every theme (the web UI's match chips) */
+.pv-badge--match {
+    background: var(--neo-event-match-main);
+    color: #1e1e1e;
+}
+.pv-msg[data-role='successText'] {
+    color: var(--neo-success-text);
+}
+.pv-msg[data-role='warningText'] {
+    color: var(--neo-warning-text);
+}
+.pv-msg[data-role='errorText'] {
+    color: var(--neo-error-text);
+}
+/* a notice: the signal as a line and a wash, its word in the -text color */
+.pv-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-left: 3px solid var(--neo-warning-main);
+    background: color-mix(in srgb, var(--neo-warning-main) 12%, transparent);
+}
+.pv-notice b {
+    color: var(--neo-warning-text);
+}
+.pv-notice--error {
+    border-left-color: var(--neo-error-main);
+    background: color-mix(in srgb, var(--neo-error-main) 12%, transparent);
+}
+.pv-notice--error b {
+    color: var(--neo-error-text);
+}
+/* the console's log lines with their repeat counts (logLevelColor: the word in -text, the count on the fill) */
+.pv-logs {
+    gap: 0;
+    padding: 6px 0;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-console-body-bg, var(--neo-bg-secondary));
+    font: 11.5px/1.6 D2Coding, ui-monospace, Menlo, monospace;
+}
+/* a tab that failed to draw (design-system ErrorBoundary .fallback--tab): the canvas color, centred */
+.pv-fail {
+    align-items: center;
+    gap: 6px;
+    padding: 14px 10px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-canvas, var(--neo-bg-primary));
+    font-size: 12px;
+}
+.pv-fail > span:nth-child(2) {
+    color: var(--neo-text-tertiary);
+    font-size: 11px;
+}
+.pv-fail-acts {
+    display: flex;
+    gap: 8px;
+}
+.pv-rep {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 6px;
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-success-main);
+    color: var(--neo-text-on-accent);
+    font-style: normal;
+    font-size: 10px;
+    line-height: 15px;
+}
+.pv-rep--warning {
+    background: var(--neo-warning-main);
+}
+.pv-rep--error {
+    background: var(--neo-error-main);
+}
+.pv-thumb--page {
+    top: 18px;
+    height: 120px;
+}
+
+/* the sign-in page: the picture over the whole page (cover — a theme's picture is any size), the sign-in box on it */
+.pv[data-scene='login'] .pv-scene--login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pv-scene--login {
+    background: var(--neo-bg-canvas, var(--neo-bg-primary));
+}
+.pv-login-pic {
+    position: absolute;
+    inset: 0;
+    background: center / cover no-repeat;
+}
+/* the web UI's .login-card, at about two thirds of its size */
+.pv-login-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 280px;
+    padding: 26px 16px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+}
+.pv-login-logo {
+    align-self: center;
+    width: 134px;
+    margin-bottom: 12px;
+    filter: brightness(1.5) saturate(1.2);
+}
+.pv-login-card .pv-input {
+    flex: none;
+    padding: 8px 10px;
+}
+.pv-login-remember {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0 8px;
+    font-size: 11px;
+}
+.pv-login-box {
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+    background: var(--neo-field-bg, var(--neo-bg-elevated));
+}
+.pv-login-card .pv-btn {
+    padding: 9px 14px;
+    font-weight: 400;
+    text-align: center;
+}
+
+/* more file kinds (neo-web's icon-* tokens) */
+.pv-fi--wrk { background: var(--neo-icon-wrk, #42a5f5); }
+.pv-fi--taz { background: var(--neo-icon-taz, #26a69a); }
+.pv-fi--md { background: var(--neo-icon-md, #42a5f5); }
+.pv-fi--json { background: var(--neo-icon-json, #fbc02d); }
+.pv-fi--csv { background: var(--neo-icon-csv, #8bc34a); }
+.pv-fi--new,
+.pv-fi--app { background: var(--neo-icon-new, #c4c4c4); }
+.pv-fi--git,
+.pv-fi--pub {
+    height: 9px;
+    border-radius: 1px 3px 2px 2px;
+}
+.pv-fi--git { background: var(--neo-icon-folder-git, #ff7043); }
+.pv-fi--pub { background: var(--neo-icon-folder-public, #42a5f5); }
+
+/* a side panel's search field */
+.pv-search {
+    padding: 6px 8px 4px;
+}
+.pv-search .pv-input {
+    display: flex;
+    width: 100%;
+    padding: 3px 8px;
+}
+.pv-search .pv-ico {
+    margin-right: 6px;
+}
+.pv-search .pv-placeholder {
+    color: var(--neo-side-text-muted, var(--neo-text-muted));
+}
+/* a count at the end of a tree row */
+.pv-it em {
+    margin-left: auto;
+    color: var(--neo-side-text-muted, var(--neo-text-muted));
+    font-size: 10.5px;
+    font-style: normal;
+}
+.pv-dbi {
+    width: 9px;
+    height: 11px;
+    border-radius: 5px / 3px;
+    /* an icon, not text: the side panel's icon color (neo-web Side.ItemIcon) */
+    color: var(--neo-side-icon, var(--neo-text-icon));
+    background: currentColor;
+}
+
+/* a table's kind in its icon (DB explorer): the kinds' own colors, deeper on a light scheme (neo-web global.scss) */
+.pv {
+    --pv-tt-log: var(--table-type-log, rgb(252, 121, 118));
+    --pv-tt-fixed: var(--table-type-fixed, #ffdc72);
+    --pv-tt-lookup: var(--table-type-lookup, #ffdc72);
+    --pv-tt-volatile: var(--table-type-volatile, rgb(255, 202, 40));
+    --pv-tt-kv: var(--table-type-kv, rgb(92, 226, 220));
+    --pv-tt-tag: var(--table-type-tag, rgb(92, 163, 220));
+    --pv-tt-view: var(--table-type-view, #9c8fff);
+    --pv-tt-transaction: var(--table-type-transaction, rgb(157, 196, 133));
+}
+.pv[data-light] {
+    --pv-tt-log: #c14445;
+    --pv-tt-fixed: #876c00;
+    --pv-tt-lookup: #876c00;
+    --pv-tt-volatile: #8a6b00;
+    --pv-tt-kv: #007c78;
+    --pv-tt-tag: #2b74aa;
+    --pv-tt-view: #6f5fca;
+    --pv-tt-transaction: #55793d;
+}
+.pv-tt {
+    flex-shrink: 0;
+    width: 12px;
+    height: 10px;
+    border-radius: 1px;
+    background: repeating-linear-gradient(180deg, var(--pv-tt) 0 2px, transparent 2px 3.4px);
+}
+.pv-tt--log, .pv-tt-c--log { --pv-tt: var(--pv-tt-log); }
+.pv-tt--tag { --pv-tt: var(--pv-tt-tag); }
+.pv-tt--transaction { --pv-tt: var(--pv-tt-transaction); }
+.pv-tt--volatile { --pv-tt: var(--pv-tt-volatile); }
+.pv-tt--lookup { --pv-tt: var(--pv-tt-lookup); }
+.pv-tt--kv { --pv-tt: var(--pv-tt-kv); }
+.pv-tt--view { --pv-tt: var(--pv-tt-view); }
+
+/* a table's page */
+.pv-dbp {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 22px;
+    overflow: hidden;
+}
+/* the table page's header row is the page's header (Page.Header): the open tab's surface, the page's full width */
+.pv-dbp-h {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -16px -22px 0;
+    padding: 10px 22px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    background: var(--neo-tabbar-active-bg, var(--neo-bg-secondary));
+    font-size: 12px;
+}
+.pv-dbp-t {
+    font-size: 20px;
+}
+.pv-dbp-h [data-token='text-tertiary'] {
+    color: var(--neo-text-tertiary);
+}
+.pv-tbadge {
+    padding: 1px 7px;
+    border-left: 2px solid var(--pv-tt);
+    background: var(--neo-bg-elevated);
+    font-size: 10px;
+}
+.pv-dbp-s {
+    margin-top: 4px;
+    font-size: 13px;
+}
+.pv-grid.pv-grid--db {
+    width: 100%;
+}
+/* a table's columns: names, not row numbers, in the page's font */
+.pv-grid--db td,
+.pv-grid--db th {
+    font-family: inherit;
+}
+.pv-grid--db td:first-child {
+    color: var(--neo-text-secondary);
+}
+
+/* the New tab page */
+/* the New tab with Customize open: the page, and beside it the Widgets panel — a drawer (newBoard
+   WidgetPanel .nb-panel: bg-panel, the items bg-elevated, the group names text-muted) */
+.pv-page-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 164px;
+    min-height: 0;
+}
+.pv-drawer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    overflow: hidden;
+    border-left: 1px solid var(--neo-border-color-default);
+    background: var(--neo-bg-panel);
+    font-size: 11px;
+}
+.pv-drawer-h {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    color: var(--neo-text-primary);
+    font-size: 12px;
+    font-weight: 600;
+}
+.pv-drawer-h i {
+    color: var(--neo-text-tertiary);
+    font-style: normal;
+    font-size: 10px;
+}
+.pv-drawer-search {
+    flex: none;
+    margin: 2px 8px 0;
+}
+.pv-drawer-cat {
+    padding: 2px 10px 0;
+    color: var(--neo-text-muted);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+.pv-drawer-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 8px;
+    padding: 6px 8px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(6px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+    color: var(--neo-text-primary);
+}
+.pv-drawer-item small {
+    overflow: hidden;
+    color: var(--neo-text-tertiary);
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.pv-nt {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 18px;
+    overflow: hidden;
+}
+.pv-nt-l {
+    color: var(--neo-text-tertiary);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+}
+.pv-nt-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+.pv-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 92px;
+    padding: 8px 10px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+    font-size: 11px;
+}
+.pv-stat--hi {
+    border-color: var(--neo-accent-light);
+}
+.pv-stat-h {
+    display: flex;
+    justify-content: space-between;
+    color: var(--neo-text-tertiary);
+}
+.pv-stat-h code {
+    color: var(--neo-text-muted);
+    font: 9.5px D2Coding, ui-monospace, monospace;
+}
+.pv-stat b {
+    font-size: 19px;
+    font-weight: 500;
+}
+.pv-stat b small {
+    color: var(--neo-text-tertiary);
+    font-size: 10px;
+}
+.pv-spark {
+    width: 100%;
+    height: 26px;
+    margin-top: auto;
+}
+.pv-spark-l {
+    fill: none;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+}
+/* as the New tab draws them (serverMetrics.ts PULSE_METRICS): every line in the accent (accent-light) */
+.pv-spark-l--accent { stroke: var(--neo-accent-light); }
+.pv-stat .pv-btn {
+    margin-top: auto;
+    text-align: center;
+}
+.pv-new {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(8px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+    font-size: 11.5px;
+}
+.pv-new .pv-fi {
+    width: 13px;
+    height: 13px;
+}
+.pv-btn.pv-btn--sm {
+    padding: 2px 9px;
+    font-size: 10.5px;
+}
+
+/* App Store: package cards */
+.pv-pkg {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 2px 8px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--neo-border-color-default);
+    font-size: 11px;
+}
+.pv-pkg.hv {
+    background: var(--neo-side-hover-bg, var(--neo-list-hover-bg));
+}
+/* the selected card (AppStore item.scss): an accent bar on the panel's hover wash, its words as they are */
+.pv-pkg--sel {
+    position: relative;
+    background: var(--neo-side-hover-bg, var(--neo-list-hover-bg));
+}
+.pv-pkg-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: var(--neo-accent-main);
+}
+/* the package's own picture: the theme does not paint it (AppStore .app-store-item-thumb has no fill or corners) */
+.pv-pkg-ic {
+    grid-row: span 3;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #5b8def, #9b6bdf);
+}
+.pv-pkg-top {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+.pv-pkg-top b {
+    overflow: hidden;
+    color: var(--neo-side-text, var(--neo-text-primary));
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pv-chip {
+    flex-shrink: 0;
+    padding: 0 5px;
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    font-size: 9.5px;
+    font-weight: 600;
+    line-height: 15px;
+}
+.pv-chip--ver {
+    background: var(--neo-neutral-main);
+    color: var(--neo-text-primary);
+}
+.pv-chip--install {
+    background: var(--neo-accent-main);
+    color: var(--neo-text-on-accent);
+}
+.pv-chip--update {
+    background: var(--neo-warning-main);
+    color: var(--neo-text-on-accent);
+}
+.pv-chip--local {
+    background: color-mix(in srgb, var(--neo-accent-hover) 18%, transparent);
+    color: var(--neo-accent-text);
+}
+.pv-pkg-pub {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--neo-text-tertiary);
+}
+.pv-ok {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--neo-accent-text);
+}
+.pv-pkg-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    color: var(--neo-text-tertiary);
+}
+/* the outlined Uninstall: the page's text (AppStore item.scss .app-store-item-text-action) */
+.pv-pkg-foot .pv-btn--line {
+    color: var(--neo-text-primary);
+}
+.pv-pkg-foot .pv-btn {
+    border-radius: calc(3px * var(--neo-radius-scale, 1));
+}
+.pv-readme {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 22px;
+    font-size: 12px;
+}
+.pv-readme-h {
+    font-size: 17px;
+    font-weight: 600;
+}
+.pv-readme > [data-role='muted'] {
+    color: var(--neo-text-muted);
+}
+.pv-pre {
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--neo-border-color-default);
+    border-radius: calc(4px * var(--neo-radius-scale, 1));
+    background: var(--neo-bg-elevated);
+    font: 11px D2Coding, ui-monospace, monospace;
+}

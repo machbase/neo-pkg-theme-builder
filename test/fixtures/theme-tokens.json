@@ -1,0 +1,852 @@
+[
+ {
+  "name": "bg-primary",
+  "dark": "#1e1e1e",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "bg-secondary",
+  "dark": "#252525",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "bg-header",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "bg-elevated",
+  "dark": "#2c2c2c",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "bg-panel",
+  "dark": "#252525",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "sub-tab-active-bg",
+  "dark": "#2e2e2e",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "hover-bg",
+  "dark": "rgba(255, 255, 255, 0.08)",
+  "kind": "hover",
+  "part": null
+ },
+ {
+  "name": "list-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "kind": "hover",
+  "part": null
+ },
+ {
+  "name": "toolbar-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "kind": "hover",
+  "part": null
+ },
+ {
+  "name": "selected-bg",
+  "dark": "rgb(0, 83, 160)",
+  "kind": "selection",
+  "part": null
+ },
+ {
+  "name": "selected-hover-bg",
+  "dark": "rgb(0, 108, 210)",
+  "kind": "selection",
+  "part": null
+ },
+ {
+  "name": "active-bg",
+  "dark": "rgb(0, 83, 160)",
+  "fallback": "selected-bg",
+  "kind": "selection",
+  "part": null
+ },
+ {
+  "name": "text-primary",
+  "dark": "#f1f1f1",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-secondary",
+  "dark": "#c4c4c4",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-tertiary",
+  "dark": "#a3a3a3",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-disabled",
+  "dark": "#818181",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-muted",
+  "dark": "#818181",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-icon",
+  "dark": "#818181",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "selected-text",
+  "dark": "rgb(243, 243, 243)",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "active-text",
+  "dark": "rgb(243, 243, 243)",
+  "fallback": "selected-text",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "text-on-accent",
+  "dark": "#ffffff",
+  "kind": "glyph",
+  "part": null
+ },
+ {
+  "name": "border-color-default",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "kind": "line",
+  "part": null
+ },
+ {
+  "name": "border-color-strong",
+  "dark": "#767676",
+  "kind": "line",
+  "part": null
+ },
+ {
+  "name": "border-color-focus",
+  "dark": "rgb(0, 108, 210)",
+  "kind": "focus",
+  "part": null
+ },
+ {
+  "name": "border-color-active",
+  "dark": "#005fb8",
+  "kind": "focus",
+  "part": null
+ },
+ {
+  "name": "accent-main",
+  "dark": "#005fb8",
+  "kind": "accent",
+  "part": null
+ },
+ {
+  "name": "accent-hover",
+  "dark": "#0075e2",
+  "kind": "accent",
+  "part": null
+ },
+ {
+  "name": "accent-light",
+  "dark": "rgb(0, 108, 210)",
+  "kind": "accent",
+  "part": null
+ },
+ {
+  "name": "accent-text",
+  "dark": "#4199ff",
+  "kind": "accent",
+  "part": null
+ },
+ {
+  "name": "accent-dark",
+  "dark": "rgb(0, 83, 160)",
+  "kind": "accent",
+  "part": null
+ },
+ {
+  "name": "success-main",
+  "dark": "#37aa3b",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "success-text",
+  "dark": "#9df486",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "error-main",
+  "dark": "rgb(255, 83, 83)",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "error-text",
+  "dark": "#fa6464",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "warning-main",
+  "dark": "#d67f00",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "warning-text",
+  "dark": "#ff9800",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "info-main",
+  "dark": "#005fb8",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "event-match-main",
+  "dark": "#ffdc72",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "button-danger-bg",
+  "dark": "#e53935",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "button-primary-bg",
+  "dark": "#005fb8",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "neutral-main",
+  "dark": "#6f7173",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "success-fill",
+  "dark": "#009688",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "button-disabled-bg",
+  "dark": "#6f7173",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "status-none",
+  "dark": "#717171",
+  "kind": "signal",
+  "part": null
+ },
+ {
+  "name": "scrollbar-thumb",
+  "dark": "#5c5c5c",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "scrollbar-hover-thumb",
+  "dark": "#868686",
+  "kind": "hover",
+  "part": null
+ },
+ {
+  "name": "scrollbar-border",
+  "dark": "#686868",
+  "kind": "line",
+  "part": null
+ },
+ {
+  "name": "scrollbar-track-bg",
+  "dark": "#2a2a2a",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "switch-bg",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "switch-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.1)",
+  "kind": "hover",
+  "part": null
+ },
+ {
+  "name": "switch-thumb",
+  "dark": "rgba(255, 255, 255, 0.3)",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "switch-active-thumb",
+  "dark": "#f1f1f1",
+  "kind": "fill",
+  "part": null
+ },
+ {
+  "name": "switch-border",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "kind": "line",
+  "part": null
+ },
+ {
+  "name": "bg-backdrop",
+  "dark": "rgba(0, 0, 0, 0.5)",
+  "kind": "overlay",
+  "part": null
+ },
+ {
+  "name": "color-black",
+  "dark": "#000000",
+  "kind": "constant",
+  "part": null
+ },
+ {
+  "name": "color-white",
+  "dark": "#ffffff",
+  "kind": "constant",
+  "part": null
+ },
+ {
+  "name": "menu-shadow",
+  "dark": "0 4px 12px rgba(0, 0, 0, 0.3)",
+  "kind": "overlay",
+  "part": "Menus"
+ },
+ {
+  "name": "menu-bg",
+  "dark": "#2d2d2d",
+  "kind": "surface",
+  "part": "Menus"
+ },
+ {
+  "name": "menu-border",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "fallback": "border-color-default",
+  "kind": "line",
+  "part": "Menus"
+ },
+ {
+  "name": "menu-item-hover-bg",
+  "dark": "#3d3d3d",
+  "kind": "hover",
+  "part": "Menus"
+ },
+ {
+  "name": "menu-item-icon",
+  "dark": "#b0b0b0",
+  "kind": "glyph",
+  "part": "Menus"
+ },
+ {
+  "name": "dialog-border",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "fallback": "border-color-default",
+  "kind": "line",
+  "part": "Dialogs"
+ },
+ {
+  "name": "tooltip-bg",
+  "dark": "#222222",
+  "kind": "surface",
+  "part": "Tooltips"
+ },
+ {
+  "name": "tooltip-text",
+  "dark": "#ffffff",
+  "kind": "glyph",
+  "part": "Tooltips"
+ },
+ {
+  "name": "tooltip-border",
+  "dark": "transparent",
+  "kind": "line",
+  "part": "Tooltips"
+ },
+ {
+  "name": "bg-canvas",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "surface",
+  "part": null
+ },
+ {
+  "name": "icon-folder",
+  "dark": "#ffca28",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-folder-git",
+  "dark": "#ff7043",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-folder-git-mark",
+  "dark": "#ffccbc",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-folder-public",
+  "dark": "rgb(66, 165, 245)",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-sql",
+  "dark": "#ffca28",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-tql",
+  "dark": "#4caf50",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-taz",
+  "dark": "#26a69a",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-taz-gray",
+  "dark": "#9fa2ab",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-wrk",
+  "dark": "#42a5f5",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-md",
+  "dark": "#42a5f5",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-json",
+  "dark": "#fbc02d",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-csv",
+  "dark": "#8bc34a",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-doc",
+  "dark": "#78909c",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-image",
+  "dark": "#26a69a",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-svg",
+  "dark": "#ffb300",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-shell",
+  "dark": "#ff7043",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-powershell",
+  "dark": "#03a9f4",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-new",
+  "dark": "#c4c4c4",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-html",
+  "dark": "#fc7976",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-css",
+  "dark": "#399af6",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-js",
+  "dark": "#fdda19",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "icon-dsh",
+  "dark": "#fc7676",
+  "kind": "content",
+  "part": null
+ },
+ {
+  "name": "gnb-bg",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "surface",
+  "part": "GNB"
+ },
+ {
+  "name": "gnb-icon",
+  "dark": "#818181",
+  "fallback": "text-icon",
+  "kind": "glyph",
+  "part": "GNB"
+ },
+ {
+  "name": "gnb-active-icon",
+  "dark": "#f1f1f1",
+  "fallback": "text-primary",
+  "kind": "glyph",
+  "part": "GNB"
+ },
+ {
+  "name": "gnb-marker",
+  "dark": "#005fb8",
+  "fallback": "accent-main",
+  "kind": "accent",
+  "part": "GNB"
+ },
+ {
+  "name": "gnb-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.08)",
+  "fallback": "hover-bg",
+  "kind": "hover",
+  "part": "GNB"
+ },
+ {
+  "name": "tabbar-bg",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "surface",
+  "part": "Tab bar"
+ },
+ {
+  "name": "tabbar-active-text",
+  "dark": "#f1f1f1",
+  "fallback": "text-primary",
+  "kind": "glyph",
+  "part": "Tab bar"
+ },
+ {
+  "name": "tabbar-inactive-text",
+  "dark": "#a3a3a3",
+  "fallback": "text-tertiary",
+  "kind": "glyph",
+  "part": "Tab bar"
+ },
+ {
+  "name": "tabbar-marker",
+  "dark": "#005fb8",
+  "fallback": "accent-main",
+  "kind": "accent",
+  "part": "Tab bar"
+ },
+ {
+  "name": "tabbar-active-bg",
+  "dark": "#252525",
+  "fallback": "bg-secondary",
+  "kind": "surface",
+  "part": "Tab bar"
+ },
+ {
+  "name": "tabbar-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.08)",
+  "fallback": "hover-bg",
+  "kind": "hover",
+  "part": "Tab bar"
+ },
+ {
+  "name": "side-bg",
+  "dark": "#252525",
+  "fallback": "bg-panel",
+  "kind": "surface",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-header-bg",
+  "dark": "#1e1e1e",
+  "fallback": "bg-header",
+  "kind": "surface",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-text",
+  "dark": "#f1f1f1",
+  "fallback": "text-primary",
+  "kind": "glyph",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-text-muted",
+  "dark": "#818181",
+  "fallback": "text-muted",
+  "kind": "glyph",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-icon",
+  "dark": "#818181",
+  "fallback": "text-icon",
+  "kind": "glyph",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "fallback": "list-hover-bg",
+  "kind": "hover",
+  "part": "Side panel"
+ },
+ {
+  "name": "side-selected-bg",
+  "dark": "rgb(0, 83, 160)",
+  "fallback": "selected-bg",
+  "kind": "selection",
+  "part": "Side panel"
+ },
+ {
+  "name": "console-bg",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "surface",
+  "part": "Console"
+ },
+ {
+  "name": "console-body-bg",
+  "dark": "#252525",
+  "fallback": "bg-secondary",
+  "kind": "surface",
+  "part": "Console"
+ },
+ {
+  "name": "console-text",
+  "dark": "#f1f1f1",
+  "fallback": "text-primary",
+  "kind": "glyph",
+  "part": "Console"
+ },
+ {
+  "name": "console-text-muted",
+  "dark": "#c4c4c4",
+  "fallback": "text-secondary",
+  "kind": "glyph",
+  "part": "Console"
+ },
+ {
+  "name": "console-tab-text",
+  "dark": "#c4c4c4",
+  "fallback": "console-text-muted",
+  "kind": "glyph",
+  "part": "Console"
+ },
+ {
+  "name": "console-marker",
+  "dark": "#005fb8",
+  "fallback": "border-color-active",
+  "kind": "accent",
+  "part": "Console"
+ },
+ {
+  "name": "console-icon",
+  "dark": "#818181",
+  "fallback": "text-icon",
+  "kind": "glyph",
+  "part": "Console"
+ },
+ {
+  "name": "console-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.08)",
+  "fallback": "hover-bg",
+  "kind": "hover",
+  "part": "Console"
+ },
+ {
+  "name": "console-selected-bg",
+  "dark": "rgb(0, 83, 160)",
+  "fallback": "selected-bg",
+  "kind": "selection",
+  "part": "Console"
+ },
+ {
+  "name": "table-header-bg",
+  "dark": "#2c2c2c",
+  "fallback": "bg-elevated",
+  "kind": "surface",
+  "part": "Tables"
+ },
+ {
+  "name": "table-header-text",
+  "dark": "#818181",
+  "fallback": "text-muted",
+  "kind": "glyph",
+  "part": "Tables"
+ },
+ {
+  "name": "table-row-number-text",
+  "dark": "#818181",
+  "fallback": "table-header-text",
+  "kind": "glyph",
+  "part": "Tables"
+ },
+ {
+  "name": "table-stripe-bg",
+  "dark": "#2c2c2c",
+  "fallback": "bg-elevated",
+  "kind": "surface",
+  "part": "Tables"
+ },
+ {
+  "name": "table-row-hover-bg",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "fallback": "list-hover-bg",
+  "kind": "hover",
+  "part": "Tables"
+ },
+ {
+  "name": "table-row-selected-bg",
+  "dark": "rgb(0, 83, 160)",
+  "fallback": "selected-bg",
+  "kind": "selection",
+  "part": "Tables"
+ },
+ {
+  "name": "field-bg",
+  "dark": "#2c2c2c",
+  "fallback": "bg-elevated",
+  "kind": "field",
+  "part": "Inputs"
+ },
+ {
+  "name": "field-border",
+  "dark": "rgba(255, 255, 255, 0.13)",
+  "fallback": "border-color-default",
+  "kind": "line",
+  "part": "Inputs"
+ },
+ {
+  "name": "field-icon",
+  "dark": "#a3a3a3",
+  "fallback": "text-tertiary",
+  "kind": "glyph",
+  "part": "Inputs"
+ },
+ {
+  "name": "field-error-border",
+  "dark": "rgb(255, 83, 83)",
+  "fallback": "error-main",
+  "kind": "line",
+  "part": "Inputs"
+ },
+ {
+  "name": "field-disabled-bg",
+  "dark": "#1e1e1e",
+  "fallback": "bg-primary",
+  "kind": "field",
+  "part": "Inputs"
+ },
+ {
+  "name": "dialog-bg",
+  "dark": "#2c2c2c",
+  "fallback": "bg-elevated",
+  "kind": "surface",
+  "part": "Dialogs"
+ },
+ {
+  "name": "dialog-title-text",
+  "dark": "#f1f1f1",
+  "fallback": "text-primary",
+  "kind": "glyph",
+  "part": "Dialogs"
+ },
+ {
+  "name": "shadow-sm",
+  "dark": "0 2px 2px rgba(0, 0, 0, 0.25)",
+  "kind": "overlay",
+  "part": null
+ },
+ {
+  "name": "shadow-md",
+  "dark": "0 4px 4px rgba(0, 0, 0, 0.25)",
+  "kind": "overlay",
+  "part": null
+ },
+ {
+  "name": "shadow-lg",
+  "dark": "0 8px 8px rgba(0, 0, 0, 0.25)",
+  "kind": "overlay",
+  "part": null
+ },
+ {
+  "name": "shadow-xl",
+  "dark": "0 10px 25px rgba(0, 0, 0, 0.5)",
+  "kind": "overlay",
+  "part": null
+ },
+ {
+  "name": "radius-scale",
+  "dark": "1",
+  "kind": "scalar",
+  "part": null
+ },
+ {
+  "name": "fx-cursor",
+  "dark": "none",
+  "kind": "scalar",
+  "part": null
+ }
+]

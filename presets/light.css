@@ -1,0 +1,35 @@
+/*
+ * light preset of neo-pkg-theme-builder (was the neo-pkg-theme-light package) — the light theme: silver-white and periwinkle surfaces,
+ * a warm sunflower yellow for buttons and selection (deep indigo ink on it), a golden yellow for the lines (the open tab and
+ * GNB markers, focus), a deeper gold where a word must read (links, menu icons), deep indigo ink for text.
+ */
+:root {
+    --neo-bg-primary: #cdd3f0; --neo-bg-secondary: #f0f2fb; --neo-bg-header: #cdd3f0; --neo-bg-elevated: #fcfdfe;
+    --neo-bg-panel: #dfe3f6; --neo-sub-tab-active-bg: #d6dbf3;
+    --neo-hover-bg: rgba(46, 51, 104, 0.15);
+    --neo-table-row-hover-bg: rgba(46, 51, 104, 0.15); --neo-list-hover-bg: rgba(46, 51, 104, 0.15); --neo-toolbar-hover-bg: rgba(46, 51, 104, 0.15); --neo-selected-bg: #f1e5c5; --neo-selected-hover-bg: #f2dca3;
+    --neo-text-primary: #1f2147; --neo-text-secondary: #262848; --neo-text-tertiary: #3b3f6d; --neo-text-disabled: #525b95; --neo-text-icon: #4d558f; --neo-text-muted: #6169a1;
+    --neo-selected-text: #12143a; --neo-text-on-accent: #1f2147;
+    --neo-border-color-default: rgba(46, 51, 104, 0.24); --neo-field-border: rgba(46, 51, 104, 0.25); --neo-border-color-strong: #7a8ad7;
+    --neo-border-color-focus: #e0b000; --neo-border-color-active: #e0b000;
+    --neo-accent-main: #f5c33b; --neo-accent-hover: #ebb42c; --neo-accent-light: #e8b800; --neo-accent-text: #765500; --neo-accent-dark: #d9a600;
+    --neo-success-main: #3a9d6c; --neo-success-text: #31654e; --neo-error-main: #e5533f; --neo-error-text: #ac2c18; --neo-warning-main: #f0892a; --neo-warning-text: #9a4a00; --neo-info-main: #6f7bcb; --neo-event-match-main: #ac600b;
+    --neo-button-danger-bg: #ec6150; --neo-field-error-border: #ec6150; --neo-button-primary-bg: #f5c33b; --neo-neutral-main: #9da3c9; --neo-success-fill: #7f8bd6; --neo-button-disabled-bg: #c7cdec;
+    --neo-gnb-marker: #e0b000; --neo-tabbar-marker: #e0b000; --neo-side-text-muted: #4f5790;
+    --neo-status-none: #606aa8;
+    --neo-scrollbar-thumb: #9199d0; --neo-scrollbar-hover-thumb: #e0b000; --neo-scrollbar-border: #7f8ed8; --neo-scrollbar-track-bg: #dfe3f6;
+    --neo-switch-bg: rgba(46, 51, 104, 0.23); --neo-switch-hover-bg: rgba(46, 51, 104, 0.22);
+    --neo-switch-thumb: #f0f2fb; --neo-switch-active-thumb: #f0f2fb; --neo-switch-border: rgba(46, 51, 104, 0.23);
+    --neo-menu-shadow: 0 4px 14px rgba(31, 33, 71, 0.14);
+    --neo-menu-bg: #feffff; --neo-menu-border: rgba(46, 51, 104, 0.23); --neo-menu-item-hover-bg: #dfe3f6; --neo-menu-item-icon: #8a6400; --neo-dialog-border: rgba(46, 51, 104, 0.23); --neo-bg-backdrop: rgba(31, 33, 71, 0.35);
+    --neo-tooltip-bg: #e3e6f6; --neo-tooltip-text: #1f2147; --neo-tooltip-border: #e0b000;
+    --neo-shadow-sm: 0 2px 2px rgba(31, 33, 71, 0.08); --neo-shadow-md: 0 4px 6px rgba(31, 33, 71, 0.09);
+    --neo-shadow-lg: 0 8px 10px rgba(31, 33, 71, 0.11); --neo-shadow-xl: 0 10px 25px rgba(31, 33, 71, 0.18);
+    /* file icons: each hue only as deep as this theme needs to read 3:1 on its panels, rows and tabs */
+    --neo-icon-folder: #b99000; --neo-icon-folder-git: #f8693c; --neo-icon-folder-public: #379beb; --neo-icon-sql: #b99000;
+    --neo-icon-tql: #45a94a; --neo-icon-taz: #26a69a; --neo-icon-taz-gray: #90939c; --neo-icon-wrk: #379beb;
+    --neo-icon-md: #379beb; --neo-icon-json: #bc8c00; --neo-icon-csv: #6da324; --neo-icon-doc: #78909c;
+    --neo-icon-image: #26a69a; --neo-icon-svg: #c38800; --neo-icon-shell: #f8693c; --neo-icon-powershell: #009ce2;
+    --neo-icon-new: #959595; --neo-icon-html: #ee6c6a; --neo-icon-css: #3597f3; --neo-icon-js: #aa9200;
+    --neo-icon-dsh: #ee696a;
+}

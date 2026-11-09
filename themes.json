@@ -1,0 +1,66 @@
+[
+    {
+        "id": "light",
+        "label": "Light",
+        "stylesheet": "presets/light.css",
+        "scheme": "light",
+        "note": "Preset",
+        "swatch": [
+            "#cdd3f0",
+            "#f0f2fb",
+            "#1f2147",
+            "#f5c33b",
+            "#7a8ad7",
+            "#3a9d6c",
+            "#e5533f"
+        ]
+    },
+    {
+        "id": "cyberpunk",
+        "label": "Cyberpunk",
+        "stylesheet": "presets/cyberpunk.css",
+        "scheme": "dark",
+        "note": "Preset",
+        "swatch": [
+            "#140a0d",
+            "#1b0c11",
+            "#f4eaec",
+            "#0f9aa0",
+            "#ff2a4a",
+            "#39ff9c",
+            "#ff2a4a"
+        ]
+    },
+    {
+        "id": "aemeath",
+        "label": "Aemeath",
+        "stylesheet": "presets/aemeath.css",
+        "scheme": "light",
+        "note": "Preset",
+        "swatch": [
+            "#efcde0",
+            "#f7f7fc",
+            "#262a4a",
+            "#bf4986",
+            "#a389bf",
+            "#286857",
+            "#b0244b"
+        ]
+    },
+    {
+        "id": "cement98",
+        "label": "Cement 98",
+        "stylesheet": "presets/cement98.css",
+        "scheme": "light",
+        "note": "Preset",
+        "swatch": [
+            "#bab7b0",
+            "#d6d3cc",
+            "#000000",
+            "#000080",
+            "#807d77",
+            "#007a00",
+            "#b00000"
+        ]
+    }
+]

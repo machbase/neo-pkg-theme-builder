@@ -1,0 +1,125 @@
+/*
+ * cement98 preset of neo-pkg-theme-builder — Windows 98 in concrete.
+ *
+ * Cement grays for the surfaces (the taskbar, the window, the button face), white input fields, the
+ * title bar's navy for the accent, the primary button, focus and the active marks, pale yellow
+ * tooltips, square corners and hard, unblurred shadows. A selected row is a pale navy, not 98's
+ * full navy: tables and the console keep their black text on it. Every variable it leaves out keeps
+ * the value it falls back to.
+ */
+:root {
+    --neo-bg-primary: #bab7b0;
+    --neo-bg-secondary: #d6d3cc;
+    --neo-bg-header: #c8c5be;
+    --neo-bg-elevated: #c8c5be;
+    --neo-bg-panel: #ccc9c2;
+    --neo-sub-tab-active-bg: #e2dfd8;
+    --neo-hover-bg: rgba(0, 0, 0, 0.08);
+    --neo-table-row-hover-bg: rgba(0, 0, 0, 0.06);
+    --neo-list-hover-bg: rgba(0, 0, 0, 0.1);
+    --neo-toolbar-hover-bg: rgba(0, 0, 0, 0.1);
+    --neo-selected-bg: #a8acc8;
+    --neo-selected-hover-bg: #9aa0c0;
+    --neo-text-primary: #000000;
+    --neo-text-secondary: #1e1d1b;
+    --neo-text-tertiary: #3a3834;
+    --neo-text-disabled: #77746e;
+    --neo-text-muted: #4f4c47;
+    --neo-text-icon: #3a3834;
+    --neo-selected-text: #000000;
+    --neo-text-on-accent: #ffffff;
+    --neo-border-color-default: rgba(0, 0, 0, 0.22);
+    --neo-border-color-strong: #807d77;
+    --neo-border-color-focus: #000080;
+    --neo-border-color-active: #000080;
+    --neo-accent-main: #000080;
+    --neo-accent-hover: #10209a;
+    --neo-accent-light: #1084d0;
+    --neo-accent-text: #000080;
+    --neo-accent-dark: #00005a;
+    --neo-success-main: #007a00;
+    --neo-success-text: #005c00;
+    --neo-error-main: #b00000;
+    --neo-error-text: #9a0000;
+    --neo-warning-main: #9a5a00;
+    --neo-warning-text: #6e4100;
+    --neo-info-main: #000080;
+    --neo-event-match-main: #8a4f00;
+    --neo-button-danger-bg: #a00000;
+    --neo-field-error-border: #a00000;
+    --neo-button-primary-bg: #000080;
+    --neo-neutral-main: #c8c5be;
+    --neo-success-fill: #55606e;
+    --neo-button-disabled-bg: #c8c5be;
+    --neo-status-none: #77746e;
+    --neo-scrollbar-thumb: #a9a69f;
+    --neo-scrollbar-hover-thumb: #8f8c85;
+    --neo-scrollbar-border: #807d77;
+    --neo-scrollbar-track-bg: #e6e3dc;
+    --neo-switch-bg: #a9a69f;
+    --neo-switch-hover-bg: rgba(0, 0, 0, 0.25);
+    --neo-switch-thumb: #ffffff;
+    --neo-switch-active-thumb: #ffffff;
+    --neo-switch-border: #807d77;
+    --neo-bg-backdrop: rgba(0, 0, 0, 0.25);
+    --neo-color-black: #000000;
+    --neo-color-white: #ffffff;
+    --neo-menu-shadow: 2px 2px 0 rgba(0, 0, 0, 0.45);
+    --neo-menu-bg: #c8c5be;
+    --neo-menu-border: #807d77;
+    --neo-menu-item-hover-bg: #a8acc8;
+    --neo-menu-item-icon: #000000;
+    --neo-dialog-border: #807d77;
+    --neo-tooltip-bg: #ffffe1;
+    --neo-tooltip-text: #000000;
+    --neo-tooltip-border: #000000;
+    --neo-bg-canvas: #b3b0a8;
+    --neo-icon-folder: #8e6e00;
+    --neo-icon-folder-git: #cd4107;
+    --neo-icon-folder-git-mark: #976a5b;
+    --neo-icon-folder-public: #0076c0;
+    --neo-icon-sql: #8e6e00;
+    --neo-icon-tql: #158423;
+    --neo-icon-taz: #00867b;
+    --neo-icon-taz-gray: #72757e;
+    --neo-icon-wrk: #0076c0;
+    --neo-icon-md: #0076c0;
+    --neo-icon-json: #977000;
+    --neo-icon-csv: #538300;
+    --neo-icon-doc: #617884;
+    --neo-icon-image: #00867b;
+    --neo-icon-svg: #9d6c00;
+    --neo-icon-shell: #cd4107;
+    --neo-icon-powershell: #007cb5;
+    --neo-icon-new: #777777;
+    --neo-icon-html: #cb4c4d;
+    --neo-icon-css: #0078d1;
+    --neo-icon-js: #887400;
+    --neo-icon-dsh: #cb494d;
+    --neo-gnb-bg: #bab7b0;
+    --neo-gnb-icon: #3a3834;
+    --neo-gnb-active-icon: #000000;
+    --neo-gnb-marker: #000080;
+    --neo-gnb-hover-bg: rgba(0, 0, 0, 0.1);
+    --neo-tabbar-bg: #bab7b0;
+    --neo-tabbar-active-text: #000000;
+    --neo-tabbar-inactive-text: #3a3834;
+    --neo-tabbar-marker: #000080;
+    --neo-tabbar-active-bg: #d6d3cc;
+    --neo-tabbar-hover-bg: rgba(0, 0, 0, 0.08);
+    --neo-console-bg: #bab7b0;
+    --neo-console-body-bg: #e6e3dc;
+    --neo-console-marker: #000080;
+    --neo-table-header-bg: #c8c5be;
+    --neo-table-stripe-bg: #cfccc5;
+    --neo-field-bg: #ffffff;
+    --neo-field-border: #807d77;
+    --neo-field-icon: #3a3834;
+    --neo-field-disabled-bg: #c8c5be;
+    --neo-dialog-bg: #c8c5be;
+    --neo-shadow-sm: 1px 1px 0 rgba(0, 0, 0, 0.35);
+    --neo-shadow-md: 2px 2px 0 rgba(0, 0, 0, 0.35);
+    --neo-shadow-lg: 3px 3px 0 rgba(0, 0, 0, 0.4);
+    --neo-shadow-xl: 4px 4px 0 rgba(0, 0, 0, 0.45);
+    --neo-radius-scale: 0;
+}

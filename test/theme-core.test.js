@@ -228,7 +228,7 @@ test('relation: the same step from another base, alpha kept', () => {
     assert.equal(C.fromOklch(o[0], o[1], o[2]), '#005fb8');
 });
 
-const presetDefaults = () => Object.fromEntries(JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'theme-tokens.json'), 'utf8')).map((t) => [t.name, t.dark]));
+const presetDefaults = () => Object.fromEntries(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tokens', 'theme-tokens.json'), 'utf8')).map((t) => [t.name, t.dark]));
 /** Tokens that are not Accent's: text, signals, fixed colors. Changing Accent must leave them be. */
 const NOT_ACCENT = /^(selected-bg|side-selected-bg|console-selected-bg|table-row-selected-bg|text-(?!on-accent)|menu-item-text|menu-item-icon|tooltip-text|neutral-main|success|warning|error|event-match|button-danger-bg|status-|color-|scrollbar-thumb-light)/;
 /** Accent's own tokens: none may keep the old accent. */
@@ -335,7 +335,7 @@ test('groups cover every token name pattern', () => {
     assert.equal(C.groupOf('table-text'), 'Tables');
     for (const [n, g] of [['accent-main', 'Accent'], ['hover-bg', 'Hover'], ['list-hover-bg', 'Hover'], ['toolbar-hover-bg', 'Hover'], ['selected-bg', 'Selection'], ['active-bg', 'Selection'], ['button-primary-bg', 'Buttons and controls'], ['neutral-main', 'Signals'], ['sub-tab-active-bg', 'Surfaces']]) assert.equal(C.groupOf(n), g, n);
     // by what the web UI says: a part's own colors under the part, the rest under their kind
-    const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'theme-tokens.json'), 'utf8'));
+    const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tokens', 'theme-tokens.json'), 'utf8'));
     const by = Object.fromEntries(tokens.map((t) => [t.name, C.groupOf(t.name, t)]));
     assert.equal(by['hover-bg'], 'Hover');
     assert.equal(by['selected-bg'], 'Selection');
@@ -536,7 +536,7 @@ test('a menu set under its older dropdown-* names reads as the menu-* ones; the 
         'menu-item-hover-bg': '#333333',
     });
     assert.deepEqual(C.parseCss(':root { --neo-dropdown-bg: #123456; --neo-menu-bg: #654321; }'), { 'menu-bg': '#654321' }, 'the menu-* name wins');
-    const known = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'theme-tokens.json'), 'utf8')).map((t) => t.name));
+    const known = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tokens', 'theme-tokens.json'), 'utf8')).map((t) => t.name));
     for (const name of ['light', 'cyberpunk', 'aemeath']) {
         const css = fs.readFileSync(path.join(__dirname, '..', 'presets', name + '.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
         const set = [...css.matchAll(/--neo-([a-z0-9-]+)\s*:/g)].map((m) => m[1]);
@@ -589,7 +589,7 @@ test('the presets: muted text no fainter than 4.5 or the icons, the warning fill
 });
 
 test('the built-in fallbacks are the web UI\'s (theme-tokens.json `fallback`), and the web UI\'s replace them when it says', () => {
-    const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'theme-tokens.json'), 'utf8'));
+    const tokens = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'tokens', 'theme-tokens.json'), 'utf8'));
     const web = Object.fromEntries(tokens.filter((t) => t.fallback).map((t) => [t.name, t.fallback]));
     assert.deepEqual({ ...C.AREA_FALLBACK }, web);
     // a light theme that sets only the frame: the section headers show the frame, not the dark default

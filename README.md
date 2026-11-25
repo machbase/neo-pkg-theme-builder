@@ -2,8 +2,8 @@
 
 Make your own color theme for the machbase-neo web UI — with a live preview — and switch to it in
 one click. Start from the built-in Dark or from one of the presets that come with the package:
-**Light**, **Cyberpunk**, **Aemeath** and **Cement 98**. The presets can also be used as they are:
-they are listed in **Settings → Theme** once the package is installed.
+**Light**, **Cyberpunk**, **Aemeath** and **Cement 98**. The presets can also be used as they are.
+Package apps that load the Theme Builder's theme script follow the theme too.
 
 | Dark | Light |
 | --- | --- |
@@ -13,12 +13,13 @@ they are listed in **Settings → Theme** once the package is installed.
 | **Cement 98** | |
 | ![The New tab in Cement 98](screenshots/newtab-cement98.png) | |
 
-Requires machbase-neo 8.7.4 or later.
+Requires machbase-neo 8.9.0 or later. Themes are an experiment: they show only while the server's
+experiment mode is on.
 
 ## Open it
 
-After installing the package from the App Store, open **Settings** (the gear at the bottom of the
-left bar) → **Theme** → **Open Theme Builder**. You can also open the package from the PACKAGES list.
+After installing the package from the App Store, open it from the PACKAGES list. (The web UI's
+Settings menu has no Theme item in this version; it comes back once packages can add to it.)
 
 ## Make a theme
 
@@ -77,14 +78,33 @@ itself. To make a light theme, starting from the Light preset is the quickest wa
   your theme — and saves no copy.
 - **Save** keeps it without switching; **Save ▾ → Save as new theme** keeps a second version. Both
   wait until you change something: a preset as it is needs no copy.
-- Switch at any time in **Settings → Theme**: Dark and the presets are under *Ready to use*, your
-  themes under *My themes*. Each card shows the web UI in that theme; **Edit** on one of yours opens
-  it here.
+- Switch at any time here: choose a card on the left — Dark, a preset or one of your themes — and
+  **Use this theme**. **Delete** on one of your themes removes it (the one in use goes back to Dark).
 
 Your themes are kept **in this browser** — the browser's, whoever signs in on it — not on the server.
 The sign-in page shows the theme chosen in this browser, and its picture. To take a theme
 to another browser or computer, use **CSS ▾ → Export CSS** and then **Import CSS** there — the CSS
 carries the colors; choose the sign-in picture there again.
+
+## Your package in the theme
+
+A package's own app does not take the web UI's theme by itself: it is a page of its own in its tab.
+The Theme Builder serves the script that dresses it in the theme in use — one line in the app's
+`<head>`:
+
+```html
+<script src="/public/neo-pkg-theme-builder/cgi-bin/theme/v1/sync"></script>
+```
+
+[example/](example/README.md) has how to load it, which token is for what, the rules, and a page drawn
+with it; [contract/theme-v1.md](contract/theme-v1.md) is what an app may count on.
+
+## Versions
+
+| Theme Builder | machbase-neo | Token list (neo-web) | Theme contract | Changes |
+| --- | --- | --- | --- | --- |
+| 1.1.0 | 8.9.0 or later | dev-next@fc8d4728 | v1 (revision 1) | Keeps the theme state and the user's themes itself; serves theme-sync to package apps; carries its own token list |
+| 1.0.0 | 8.7.2 or later | read from the server | — | First release |
 
 ---
 

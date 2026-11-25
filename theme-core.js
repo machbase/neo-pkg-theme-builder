@@ -402,8 +402,8 @@
         'active-bg': 'selected-bg', 'active-text': 'selected-text',
     };
     /**
-     * The fallbacks the web UI says it has (theme-tokens.json `fallback`): they replace the list above, which
-     * stays for a web UI that does not say yet.
+     * The fallbacks the web UI has (its token list, tokens/theme-tokens.json `fallback`): they replace the
+     * list above, which stays for a list that does not say.
      */
     function useFallbacks(aTokens) {
         (aTokens || []).forEach(function (t) { if (t && typeof t.fallback === 'string' && typeof t.name === 'string') AREA_FALLBACK[t.name] = t.fallback; });
@@ -861,9 +861,9 @@
     // ---- tokens --------------------------------------------------------------------------
 
     /**
-     * The token list's groups. The web UI says what each token is (theme-tokens.json `kind` and `part`,
-     * from its tokenKinds.ts): a part's own colors go under the part, the rest under their kind. A web UI
-     * that does not say yet is grouped by name.
+     * The token list's groups. The web UI's token list says what each token is (tokens/theme-tokens.json
+     * `kind` and `part`, from its tokenKinds.ts): a part's own colors go under the part, the rest under
+     * their kind. A list that does not say is grouped by name.
      */
     var PART_ORDER = ['GNB', 'Tab bar', 'Side panel', 'Console', 'Tables', 'Inputs', 'Dialogs', 'Menus', 'Tooltips'];
     var KIND_GROUP = {

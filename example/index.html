@@ -1,0 +1,82 @@
+<!doctype html>
+<!--
+    A package app page that wears the web UI's theme: its own CSS, drawing with var(--neo-<token>)
+    only, then theme-sync (the theme contract v1, served by the Theme Builder), which sets every token
+    on this page's <html>. Nothing is copied into the app. Opened from the package,
+    /public/neo-pkg-theme-builder/example/, it shows how the parts look in the theme this browser chose.
+-->
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Theme example</title>
+        <style>
+            * { box-sizing: border-box; }
+            body { margin: 0; padding: 16px; background: var(--neo-bg-secondary); color: var(--neo-text-primary); font: 13px/1.5 system-ui, sans-serif; display: grid; gap: 12px; grid-template-columns: 220px 1fr; }
+            .list { background: var(--neo-side-bg); border: 1px solid var(--neo-border-color-default); border-radius: calc(4px * var(--neo-radius-scale)); overflow: hidden; }
+            .list h3 { margin: 0; padding: 6px 10px; background: var(--neo-side-header-bg); color: var(--neo-side-text-muted); font-size: 11px; text-transform: uppercase; }
+            .list div { padding: 4px 10px; color: var(--neo-side-text); cursor: default; }
+            .list div:hover { background: var(--neo-side-hover-bg); }
+            .list div.on { background: var(--neo-side-selected-bg); color: var(--neo-selected-text); }
+            .list small { color: var(--neo-side-text-muted); }
+            .card { background: var(--neo-bg-elevated); border: 1px solid var(--neo-border-color-default); border-radius: calc(8px * var(--neo-radius-scale)); box-shadow: var(--neo-shadow-md); padding: 12px; display: grid; gap: 10px; }
+            .sub { color: var(--neo-text-muted); }
+            input { background: var(--neo-field-bg); color: var(--neo-text-primary); border: 1px solid var(--neo-field-border); border-radius: calc(4px * var(--neo-radius-scale)); padding: 4px 8px; }
+            input:focus { outline: 1px solid var(--neo-border-color-focus); }
+            input::placeholder { color: var(--neo-text-muted); }
+            button { border: 0; border-radius: calc(4px * var(--neo-radius-scale)); padding: 5px 12px; color: var(--neo-text-on-accent); background: var(--neo-button-primary-bg); cursor: pointer; }
+            button:hover { background: var(--neo-accent-hover); }
+            button.danger { background: var(--neo-button-danger-bg); }
+            button.plain { background: transparent; color: var(--neo-text-primary); border: 1px solid var(--neo-border-color-default); }
+            button.plain:hover { background: var(--neo-hover-bg); }
+            .badges span { display: inline-block; margin-right: 6px; padding: 0 8px; border-radius: calc(2px * var(--neo-radius-scale)); }
+            .ok { color: var(--neo-success-text); background: color-mix(in srgb, var(--neo-success-main) 16%, transparent); }
+            .warn { color: var(--neo-warning-text); background: color-mix(in srgb, var(--neo-warning-main) 16%, transparent); }
+            .err { color: var(--neo-error-text); background: color-mix(in srgb, var(--neo-error-main) 16%, transparent); }
+            table { border-collapse: collapse; width: 100%; }
+            th { background: var(--neo-table-header-bg); color: var(--neo-table-header-text); text-align: left; font-weight: 500; }
+            th, td { padding: 4px 8px; border-bottom: 1px solid var(--neo-border-color-default); }
+            tr:hover td { background: var(--neo-table-row-hover-bg); }
+            tr.on td { background: var(--neo-table-row-selected-bg); color: var(--neo-selected-text); }
+            canvas { width: 100%; height: 60px; background: var(--neo-bg-canvas); border-radius: calc(4px * var(--neo-radius-scale)); }
+        </style>
+        <script src="/public/neo-pkg-theme-builder/cgi-bin/theme/v1/sync"></script>
+    </head>
+    <body>
+        <nav class="list">
+            <h3>Sources</h3>
+            <div>camera-01 <small>· live</small></div>
+            <div class="on">camera-02 <small>· live</small></div>
+            <div>uploads <small>· 12</small></div>
+        </nav>
+        <main class="card">
+            <div><strong>Camera 02</strong> <span class="sub">— <span id="scheme"></span> scheme</span></div>
+            <div class="badges"><span class="ok">Receiving</span><span class="warn">Slow</span><span class="err">Lost</span></div>
+            <div><input placeholder="Filter…" /> <button>Save</button> <button class="plain">Cancel</button> <button class="danger">Delete</button></div>
+            <table>
+                <tr><th>Time</th><th>Event</th></tr>
+                <tr><td>10:02:11</td><td>Motion</td></tr>
+                <tr class="on"><td>10:04:37</td><td>Door open</td></tr>
+                <tr><td>10:09:50</td><td>Motion</td></tr>
+            </table>
+            <canvas id="spark" width="600" height="60"></canvas>
+        </main>
+        <script>
+            // Code that paints colours itself reads them when it starts, and again on every change.
+            function draw() {
+                var css = getComputedStyle(document.documentElement);
+                var c = document.getElementById('spark');
+                var g = c.getContext('2d');
+                g.clearRect(0, 0, c.width, c.height);
+                g.strokeStyle = css.getPropertyValue('--neo-accent-main').trim();
+                g.lineWidth = 2;
+                g.beginPath();
+                for (var x = 0; x <= c.width; x += 10) g.lineTo(x, 30 + 20 * Math.sin(x / 40));
+                g.stroke();
+                document.getElementById('scheme').textContent = document.documentElement.dataset.neoScheme || 'dark';
+            }
+            draw();
+            window.neoThemeSync.onChange(draw);
+        </script>
+    </body>
+</html>

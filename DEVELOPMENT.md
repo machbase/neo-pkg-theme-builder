@@ -82,10 +82,10 @@ Changing a color moves only what it names:
   text, so it stays when the accent changes (change it under *Text*); a hover background is never tied
   to an icon color or a status dot, however alike.
 - **File icons are only as deep as the theme needs.** On a dark theme they are the Material colors. On a
-  light one each starts from a deeper shade of its hue and is deepened further only until it reads 3:1 on
-  the theme's own side panel, hovered and selected rows, tab bar and hovered tab, content, raised cards and
-  dialogs — a white theme keeps them bright, a mid-tone one (Light, Aemeath) gets them deep. The light
-  presets carry theirs; changing a surface works them out again; one you set yourself under *File icons* stays.
+  light one each keeps its Material color and is deepened only until it reads 1.5:1 on the theme's own side
+  panel and its selected row, tab bar, content, raised cards and dialogs (the file's name is beside it); a
+  yellow leans to amber as it deepens, where a deeper yellow would go olive. The light presets carry theirs;
+  changing a surface works them out again; one you set yourself under *File icons* stays.
 - **Hover is one category.** *Hover* (Surfaces) is what the pointer does on the content; every part's
   hover background (a GNB icon, a tab, a side panel row, a console button, a table row, a menu item)
   is the same step over that part's own background, so changing Hover moves them all and each still sits

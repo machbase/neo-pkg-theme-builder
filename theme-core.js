@@ -217,10 +217,11 @@
     }
     /**
      * File-type icons (neo-web's icon-* tokens): the Material colors the dark screen draws. Under a
-     * light scheme each keeps that color and is deepened, hue kept, only as far as this theme needs
-     * to read 2:1 on what it sits on at rest — the side panel and its selected row, the tab bar, the
+     * light scheme each keeps that color and is deepened only as far as this theme needs to read
+     * 1.5:1 on what it sits on at rest — the side panel and its selected row, the tab bar, the
      * content, raised cards and dialogs. An icon sits beside its file's name, so it needs to be told
-     * apart, not read as text: held to 3:1 on every hovered row too, the presets' folders went brown.
+     * apart, not read as text: held to 3:1 on every hovered row too, the presets' folders went brown,
+     * and at 2:1 the yellows still went olive. A yellow leans to amber as it deepens (iconAt).
      * (The git mark sits on its folder, not on the page: it is left alone.)
      */
     var ICONS = {
@@ -239,18 +240,23 @@
      */
     var ICON_FLOOR = 0.42;
     /** How well an icon must stand out from its ground (it is not the only sign of its file: the name is beside it). */
-    var ICON_CONTRAST = 2;
+    var ICON_CONTRAST = 1.5;
+    /** An icon deepened to lightness aL: a yellow turns toward amber on the way, which stays bright where a deeper yellow goes olive. */
+    function iconAt(o, aL) {
+        var h = o[2] > 75 && o[2] < 112 ? Math.max(70, o[2] - 120 * (o[0] - aL)) : o[2];
+        return fromOklch(aL, o[1], h);
+    }
     function iconOn(aBase, aGrounds) {
         var o = toOklch(aBase), c = aBase;
         if (!o || !aGrounds.length) return aBase;
         // A ground the icon cannot read on even at its deepest — a dark Layer or dialog beside light
         // panels — is not chased: one color cannot be deep for the one and light for the other, and
         // chasing both took every icon to black.
-        var deepest = fromOklch(Math.min(o[0], ICON_FLOOR), o[1], o[2]);
+        var deepest = iconAt(o, Math.min(o[0], ICON_FLOOR));
         var grounds = aGrounds.filter(function (g) { return contrast(deepest, g) >= ICON_CONTRAST; });
         var worst = function (x) { return Math.min.apply(null, grounds.map(function (g) { return contrast(x, g); })); };
         if (!grounds.length) return aBase;
-        for (var l = o[0]; worst(c) < ICON_CONTRAST && l > ICON_FLOOR; l -= 0.01) c = fromOklch(l, o[1], o[2]);
+        for (var l = o[0]; worst(c) < ICON_CONTRAST && l > ICON_FLOOR; l -= 0.01) c = iconAt(o, l);
         return c;
     }
 
@@ -987,6 +993,7 @@
         apartFromHover: apartFromHover,
         ICONS: ICONS,
         iconGrounds: iconGrounds,
+        iconOn: iconOn,
         ICON_CONTRAST: ICON_CONTRAST,
         relationText: relationText,
         dependentsOf: dependentsOf,

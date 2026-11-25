@@ -135,7 +135,7 @@ test('hover: Content moving keeps the start\'s hover — its wash, laid over the
     }
 });
 
-// File icons under a light scheme: each keeps its color, only as deep as the theme's own panels, selected row and tabs need (2:1 at rest).
+// File icons under a light scheme: each keeps its color, only as deep as the theme's own panels, selected row and tabs need (1.5:1 at rest).
 test('file icons: a light theme deepens them only as far as it needs, a dark one keeps the Material colors', () => {
     const defaults = presetDefaults();
     const icons = Object.keys(C.ICONS);

@@ -54,7 +54,7 @@ Click any part of it to open that part's color. The contrast checks below it ope
 they measure.
 
 **Save** keeps the theme **in this browser** (*My themes · this browser* in the
-start list; the web UI lists it under Settings → Theme → My themes); its **▾** has **Save as new
+start list); its **▾** has **Save as new
 theme**. **Use this theme** saves it and switches the web UI to it, with an **Undo** back to the theme
 before. A start left as it is (nothing changed, its name as given) is not saved again: **Use this
 theme** switches to it as it is — Dark, the preset (`{ pkg: 'neo-pkg-theme-builder', stylesheet:
@@ -82,10 +82,10 @@ Changing a color moves only what it names:
   text, so it stays when the accent changes (change it under *Text*); a hover background is never tied
   to an icon color or a status dot, however alike.
 - **File icons are only as deep as the theme needs.** On a dark theme they are the Material colors. On a
-  light one each starts from a deeper shade of its hue and is deepened further only until it reads 3:1 on
-  the theme's own side panel, hovered and selected rows, tab bar and hovered tab, content, raised cards and
-  dialogs — a white theme keeps them bright, a mid-tone one (Light, Aemeath) gets them deep. The light
-  presets carry theirs; changing a surface works them out again; one you set yourself under *File icons* stays.
+  light one each keeps its Material color and is deepened only until it reads 1.5:1 on the theme's own side
+  panel and its selected row, tab bar, content, raised cards and dialogs (the file's name is beside it); a
+  yellow leans to amber as it deepens, where a deeper yellow would go olive. The light presets carry theirs;
+  changing a surface works them out again; one you set yourself under *File icons* stays.
 - **Hover is one category.** *Hover* (Surfaces) is what the pointer does on the content; every part's
   hover background (a GNB icon, a tab, a side panel row, a console button, a table row, a menu item)
   is the same step over that part's own background, so changing Hover moves them all and each still sits
@@ -100,44 +100,42 @@ Changing a color moves only what it names:
 "neoTheme": { "label": "Theme Builder", "index": "themes.json" }
 ```
 
-so the web UI treats it as a theme package with an app (Settings → Theme → **Open Theme Builder**,
-no Start/Stop in the App Store) and lists the presets under *Ready to use*, to be chosen as they are;
-the themes the builder saves are in the browser (*My themes*).
+so the web UI treats it as a theme package with an app (no Start/Stop in the App Store). The web UI's
+Settings menu has no Theme item in this version: themes are chosen here, and the item comes back once
+packages can add to it.
 
-**Saving goes through the web UI.** The builder never reads or writes the saved themes or the choice
-in localStorage itself; neo-web does (`src/design-system/theme/theme.ts`), with the checks it applies
-when it reads them back. The builder asks its parent window (same origin) by postMessage and is
-answered there:
+**The builder owns the theme state** (`theme-store.js`; the format is [contract/state-v1.md](contract/state-v1.md)).
+It is the one page that writes it; the web UI and every package's app only read it:
 
-```
-→ { type: 'neo-theme', action: 'themes', request }
-→ { type: 'neo-theme', action: 'save', request, theme: { id, label, scheme, css, swatch, note, roles, pinned, saved }, picture: Blob | null }
-→ { type: 'neo-theme', action: 'delete', request, id }
-→ { type: 'neo-theme', action: 'picture', request, id }   a saved theme's sign-in picture
-← { type: 'neo-theme', action: 'reply', request, ok, reason?, themes, choice, picture?, edit? }
-← { type: 'neo-theme', action: 'changed' }        the themes or the choice changed: ask again
-```
+| Key | What | Readers |
+| --- | --- | --- |
+| `neo.theme.state` | The theme in use: `{ v: 1, owner, scheme, theme: { pkg, stylesheet, label }, set, resolved, tokens, loginImage?, at }`. `set` is what the theme sets, `resolved` every token's final value (its own, its fallback's, or the dark default, over the token list). No key: Dark. | the web UI (wears `set`), theme-sync (puts `resolved` on an app) |
+| `neo-theme-builder.themes` | The user's themes `[{ id, label, scheme, css, swatch, note, roles, pinned, loginImage?, saved }]`. Taken over once from `neo.themes`, where the web UI kept them before. | the builder |
+| IndexedDB `neo-theme` → `pictures` | Sign-in pictures, key = the theme's id. | the builder; the web UI's sign-in page, for the one `loginImage` names |
 
-`edit` (`{ pkg, stylesheet, label, scheme }`) is a theme Settings → Theme asked to open here (**Edit**
-on one of the user's themes): it comes once, with the `themes` answer the builder asks for on opening
-or after `changed`, and opens like a click on its card (asking first when there are unsaved changes).
-
-A save that is refused — signed out, an unusable entry, a picture neo-web does not keep, the
-browser's storage full — comes back with `ok: false` and the reason, shown as is. Deleting the theme
-in use takes the web UI back to Dark. Opened outside the web UI, nothing answers: the builder still
-edits and exports CSS, and Save says to open it from Settings → Theme.
+Writing the state is the whole notification: the browser fires `storage` in every other page of the
+origin. The builder's own page gets none for its own write, so after one it calls
+`neoThemeSync.refresh()` itself (`worn` in builder.js). What is read back is checked again (names,
+values that cannot leave a declaration, the entry's shape): storage is anyone's to edit. Deleting
+the theme in use takes the state back to Dark. A save that cannot be kept — an unusable entry, the
+browser's storage full — says why; Export CSS keeps a copy. An uninstall cannot reach a browser's
+storage, so the web UI ignores a state whose owner is not installed any more.
 
 A theme saved in the browser can have a picture for the sign-in page. It is the file itself (a
-Blob), sent with the save and kept by neo-web in IndexedDB (`neo-theme` → `pictures`, key
-`<user>/<id>`, `themePicture.ts`); the theme's entry only says it has one (`loginImage: true`), so
-the list read before the first paint stays small. `readPicture` keeps the chosen file as it is when
-it is a WebP, PNG, JPEG, GIF or AVIF of at most 10 MB — what neo-web takes — and draws anything else
-(an SVG, a larger file) again as a WebP at most 1920 px on its longer side. Opening a saved theme
-asks for its picture. The preview's *Sign-in* scene shows it, or `login-default.webp` (the web
-UI's own picture, made smaller) when there is none. A stylesheet sets the web UI's design tokens as CSS variables
-(`--neo-<token>`) on `:root`; one it leaves out keeps the built-in dark value. The token list
-and the dark defaults come from the web UI itself (`/web/ui/theme-tokens.json`), so the builder
-always edits the variables of the version it runs on.
+Blob), kept in IndexedDB before the entry is saved; the entry only says it has one (`loginImage: true`),
+and the state of the theme in use names it (`loginImage: { picture: <id> }`) so the sign-in page can
+read it. `readPicture` keeps the chosen file as it is when it is a WebP, PNG, JPEG, GIF or AVIF of at
+most 10 MB and draws anything else (an SVG, a larger file) again as a WebP at most 1920 px on its
+longer side. The preview's *Sign-in* scene shows it, or `login-default.webp` (the web UI's own
+picture, made smaller) when there is none. A stylesheet sets the web UI's design tokens as CSS
+variables (`--neo-<token>`) on `:root`; one it leaves out keeps the built-in dark value.
+
+**The token list is this package's**: `tokens/theme-tokens.json`, a copy of what a neo-web release's
+build writes from its token sources (`dist/theme-tokens.json`, also in the release's `web-ui.zip`),
+with where it came from in `tokens/SOURCE`. `node scripts/build.js` makes the builder's copy
+(`generated/builder-tokens.js`) and theme-sync (`sync/v1/theme-sync.js`) from it; both are committed,
+since the package installs as its repository is at the release tag. Nothing is read from the server,
+and `minServerVersion` is the machbase-neo whose web UI carries that token list.
 
 ## Parts of the screen and `impact.json`
 
@@ -168,10 +166,11 @@ token; the contrast checks say when a theme's ground for it stops the shared tex
    declaration order), and the component drawing with them.
 2. theme-core.js: the part in `PART_GROUPS` and `ROLE_GROUPS`, a role per token (`group` = the part,
    `label` from the list above, `follow` the shared color it is, or `auto`), the token in `derive`.
-   `AREA_FALLBACK` comes from the web UI's `theme-tokens.json`.
+   `AREA_FALLBACK` comes from the token list (`tokens/theme-tokens.json`).
 3. The preview: draw it in a scene with `data-role` — every role is drawn somewhere (test), and a
    shared color in a scene is listed in `SHARED` with where the web UI paints it there.
-4. `test/fixtures/theme-tokens.json`: the file the web UI serves now.
+4. The token list: `node scripts/tokens.js <neo-web dist/theme-tokens.json> "neo-web <release>"`,
+   then `node scripts/build.js`; the Versions table in the README gets a row.
 
 `impact.json` is where each token is drawn: `{ "tokens": { "<token>": [["<place>", <count>], …] } }`.
 It is measured, not written: a canary run of the web UI's visual measurer gives every token its
@@ -180,10 +179,31 @@ own color over all 269 screen states, and `impactmap.mjs` (neo-web-regress,
 Re-measure it when the web UI moves colors between tokens. Without it, roles still list their
 parts, only not the "also" places.
 
+## Themes in other packages' apps: theme-sync
+
+An app tab is a page of its own (an iframe): the web UI's `--neo-*` do not reach it. The builder
+serves the one file an app loads to wear the theme: `/public/neo-pkg-theme-builder/cgi-bin/theme/v1/sync`
+(`cgi-bin/theme/v1/sync.js` sends `sync/v1/theme-sync.js` with `Content-Length` and
+`Cache-Control: public, max-age=300`). Before the first paint it puts every token on the app's `<html>`
+— `resolved` from the state, or the dark defaults — with `data-neo-scheme` and `color-scheme`; it
+reads again on `storage` and whenever the tab comes back to the front (a tab behind others may not get
+the storage event in WebKit), and fires `neo-theme-change` when anything moved. The builder's own
+page loads it too.
+
+What an app may count on is [contract/theme-v1.md](contract/theme-v1.md) (the tokens it promises:
+`contract/theme-v1.tokens`). `example/` is how to use it, which token is for what, the rules and a page
+drawn that way ([example/README.md](example/README.md)); `test/example.test.js` keeps that page to the
+rules.
+
+The source is `sync/theme-sync.src.js` (plain ES5, ASCII — the cgi script's `Content-Length` is its
+length); `scripts/build.js` writes the dark defaults in. A change an app could notice is a contract
+change: within v1 only additions (`revision`), and a break is v2 beside it (`cgi-bin/theme/v2/`).
+
 ## Tests
 
 ```sh
-node --test test/theme-core.test.js test/preview.test.js
+node scripts/build.js --check      # the committed generated files are up to date
+node --test test/*.test.js
 ```
 
 `preview.test.js` keeps the preview true to the web UI: a scene's part may take a shared color

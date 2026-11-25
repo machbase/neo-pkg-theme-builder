@@ -12,24 +12,25 @@
  * (pointing at a role outlines what it changes there, a change flashes it) and in the web UI
  * (impact.json, measured on every screen) — so a color never moves something you did not expect.
  *
- * Saving keeps the theme in this browser — the browser's, whoever signs in on it — and no server
- * write is needed. neo-web's Settings → Theme lists it under My themes. A start used as it is —
- * Dark, a preset (this package's index, themes.json, listed in Settings → Theme too), one of yours —
- * is not saved again: Use this theme switches to it, and Save waits for a change. The page does not read or write the saved themes itself: it asks neo-web
- * (window.parent, same origin), which keeps and checks them, by postMessage —
- * { type: 'neo-theme', action: 'themes' | 'save' | 'delete' | 'picture', request } — and is answered with the
- * browser's themes and the theme in use; { action: 'changed' } says to ask again. Choosing a
- * theme is { action: 'apply' }. Settings → Theme can ask for one of the user's themes to be opened
- * here (Edit): it comes as `edit` with a themes answer, and opens like a click on its card.
+ * The builder owns the theme state (theme-store.js): it is the one page that writes it. Saving keeps
+ * the theme in this browser — the browser's, whoever signs in on it — and no server write is needed.
+ * Use this theme writes the theme in use (localStorage "neo.theme.state": the values the theme sets
+ * and every token's final colour); the web UI and every package's app only read it, and the browser
+ * tells them it changed (the storage event). A start used as it is — Dark, a preset (this package's
+ * index, themes.json), one of yours — is not saved again: Use this theme switches to it, and Save
+ * waits for a change. The token list is this package's (generated/builder-tokens.js, made from a
+ * neo-web release's tokens/theme-tokens.json): nothing is asked of the server.
  *
- * A theme can carry a picture for the sign-in page: the file itself (a Blob), sent with the save
- * ({ action: 'save', picture }) and asked for when the theme is opened ({ action: 'picture', id }).
- * neo-web keeps it in IndexedDB and its entry only says it has one (`loginImage: true`); it shows
- * on the sign-in page of this browser only, like the theme.
+ * A theme can carry a picture for the sign-in page: the file itself (a Blob), kept in IndexedDB
+ * ("neo-theme" / "pictures"); the theme's entry only says it has one (`loginImage: true`) and the
+ * state of the theme in use names it, so the web UI's sign-in page can show it — in this browser
+ * only, like the theme.
  */
 (function () {
     'use strict';
     var C = window.ThemeCore;
+    var S = window.ThemeStore;
+    var T = window.NeoThemeTokens || { source: '', tokens: [] };
     var PKG = decodeURIComponent(location.pathname.split('/')[2] || 'neo-pkg-theme-builder');
     var BASE = '/public/' + encodeURIComponent(PKG) + '/';
     var LOCAL = '@local';
@@ -41,21 +42,16 @@
     var has = function (o, k) { return Object.prototype.hasOwnProperty.call(o, k); };
 
     var state = {
-        tokens: [], // [{ name, dark }] from neo-web
+        tokens: [], // [{ name, dark, fallback?, kind, part }] (generated/builder-tokens.js)
         defaults: {}, // name → dark default
         presets: [], // index entries (themes.json)
-        mine: [], // the browser's own themes, as neo-web keeps them: { id, label, scheme, css, swatch, roles, pinned }
-        choice: null, // the theme in use, as neo-web answers: { pkg, stylesheet, label, scheme } | null (Dark)
-        hosted: false, // neo-web answered: the page is in its app tab and can save
-        inUse: null, // the theme in use when it is not one of ours: { choice, vars }
+        mine: [], // the browser's own themes (theme-store.js): { id, label, scheme, css, swatch, roles, pinned }
         start: null, // { key, kind, label, scheme, vars, id?, own, pinned }
         own: {}, // role → color the theme gives it
         pinned: {}, // token → value set by hand
         name: '',
         picture: null, // the sign-in page's picture (a Blob), null: the web UI's own
         editingId: null, // the saved theme being edited (Save overwrites it)
-        version: '', // this package's version: a preset used as it is is linked with it (?v=), as neo-web links package themes
-        editRequest: null, // a theme neo-web asked to open here (Settings → Theme, Edit): { pkg, stylesheet }
         impact: null, // { tokens: { name → [[place, count]…] } }: where each shared token is drawn in the web UI
         busy: false,
         scene: 'work',
@@ -255,16 +251,13 @@
         var a = startRoles(), b = resolved();
         return C.ROLES.filter(function (d) { return a[d.key] !== b[d.key]; }).length;
     }
-    /** The theme in use (null: Dark), as neo-web last answered. */
+    /** The theme in use (null: Dark), as the state says now (theme-store.js). */
     function currentChoice() {
-        return state.choice;
+        return S.currentChoice();
     }
     function isInUse(aPkg, aStylesheet) {
         var c = currentChoice();
         return !!c && c.pkg === aPkg && c.stylesheet === aStylesheet;
-    }
-    function hrefOf(aPkg, aStylesheet) {
-        return '/public/' + encodeURIComponent(aPkg) + '/' + aStylesheet.split('/').map(encodeURIComponent).join('/');
     }
 
     // ---- package files ---------------------------------------------------------------------
@@ -281,108 +274,46 @@
             .catch(function () { return []; });
     }
 
-    // ---- neo-web ---------------------------------------------------------------------------
+    // ---- the theme in use (theme-store.js) -------------------------------------------------
 
-    function tell(aMessage) {
-        try {
-            if (window.parent && window.parent !== window) window.parent.postMessage(Object.assign({ type: 'neo-theme' }, aMessage), location.origin);
-        } catch (e) {
-            /* not inside neo-web */
+    /**
+     * Puts `aChoice` on everywhere ({ pkg, stylesheet, label, scheme }; null: Dark): the values it
+     * sets (`aVars`) and every token's final colour, worked out over this package's token list.
+     * `aPictureId`: one of the user's themes that has a sign-in picture. { ok } or { ok: false, reason }.
+     */
+    function wear(aChoice, aVars, aPictureId) {
+        var r = aChoice ? S.writeState(S.makeState(aChoice, aChoice.scheme, aVars, state.tokens, T.source, aPictureId ? { picture: aPictureId } : undefined)) : S.clearState();
+        worn();
+        return r;
+    }
+    /** The state changed here: this page wears it (theme-sync gets no storage event from its own page) and says so. */
+    function worn() {
+        if (window.neoThemeSync) window.neoThemeSync.refresh();
+        if (state.start) {
+            renderTop();
+            renderStarts();
         }
     }
-
-    var asked = {};
-    var lastRequest = 0;
-    /** Asks neo-web (themes, save, delete); resolves with its reply, rejects when nothing answers. */
-    function ask(aMessage) {
-        return new Promise(function (resolve, reject) {
-            if (!window.parent || window.parent === window) {
-                reject(new Error('open the Theme Builder from the web UI (Settings → Theme)'));
-                return;
-            }
-            var request = ++lastRequest;
-            asked[request] = {
-                resolve: resolve,
-                timer: setTimeout(function () {
-                    delete asked[request];
-                    reject(new Error('the web UI did not answer'));
-                }, 5000),
-            };
-            tell(Object.assign({ request: request }, aMessage));
+    /** Says `aLabel` is in use, with Undo putting the theme that was in use (`aPrevious`, a state) back. */
+    function sayInUse(aLabel, aPrevious) {
+        say(aLabel + ' is in use.', 'ok', {
+            label: 'Undo',
+            run: function () {
+                if (aPrevious) S.writeState(aPrevious);
+                else S.clearState();
+                worn();
+                say('Back to ' + (aPrevious ? aPrevious.theme.label || 'the theme before' : 'Dark') + '.', 'ok');
+            },
         });
     }
-    /** What every reply carries: the browser's themes and the theme in use. */
-    function takeReply(aReply) {
-        state.hosted = true;
-        state.mine = Array.isArray(aReply.themes) ? aReply.themes : [];
-        state.choice = aReply.choice && typeof aReply.choice === 'object' ? aReply.choice : null;
-        if (aReply.edit && typeof aReply.edit === 'object' && typeof aReply.edit.pkg === 'string' && typeof aReply.edit.stylesheet === 'string') state.editRequest = aReply.edit;
-    }
-    /** Asks for the browser's themes again (after a change here, in the web UI or in another tab). */
+    /** The user's themes, read again; another page (another tab, the web UI) changed the state or them. */
     function refreshMine() {
-        return ask({ action: 'themes' }).then(
-            function (r) {
-                takeReply(r);
-                wearChosenTheme();
-                if (state.start) {
-                    renderTop();
-                    renderStarts();
-                    openRequested();
-                }
-            },
-            function () { /* not inside neo-web: nothing to show */ }
-        );
+        state.mine = S.readMine();
+        worn();
     }
-    window.addEventListener('message', function (e) {
-        var d = e.data;
-        if (e.origin !== location.origin || e.source !== window.parent || !d || d.type !== 'neo-theme') return;
-        if (d.action === 'reply' && asked[d.request]) {
-            var waiting = asked[d.request];
-            delete asked[d.request];
-            clearTimeout(waiting.timer);
-            takeReply(d);
-            waiting.resolve(d);
-        } else if (d.action === 'changed') {
-            refreshMine();
-        }
+    window.addEventListener('storage', function (e) {
+        if (e.key === null || e.key === S.STATE_KEY || e.key === S.MINE_KEY) refreshMine();
     });
-
-    /** The builder itself wears the theme chosen in neo-web (its stylesheet, linked as neo-web links it). */
-    function wearChosenTheme() {
-        var c = currentChoice();
-        var local = $('host-theme-local');
-        if (c && c.pkg === LOCAL) {
-            var own = state.mine.find(function (e) { return e.id + '.css' === c.stylesheet; });
-            if (!local) {
-                local = document.createElement('style');
-                local.id = 'host-theme-local';
-                document.head.insertBefore(local, document.head.querySelector('link'));
-            }
-            local.textContent = own ? C.toCss(C.parseCss(own.css), { label: own.label, scheme: own.scheme }) : '';
-            if ($('host-theme')) $('host-theme').remove();
-            document.body.style.colorScheme = c.scheme === 'light' ? 'light' : 'dark';
-            return;
-        }
-        if (local) local.remove();
-        var link = $('host-theme');
-        var href = c && c.pkg && c.stylesheet ? hrefOf(c.pkg, c.stylesheet) : null;
-        if (!href) {
-            if (link) link.remove();
-            document.body.style.colorScheme = '';
-            return;
-        }
-        if (!link) {
-            link = document.createElement('link');
-            link.id = 'host-theme';
-            link.rel = 'stylesheet';
-            document.head.insertBefore(link, document.head.querySelector('link'));
-        }
-        if (link.getAttribute('data-href') !== href) {
-            link.setAttribute('data-href', href);
-            link.href = href + '?v=' + Date.now();
-        }
-        document.body.style.colorScheme = c.scheme === 'light' ? 'light' : 'dark';
-    }
 
     // ---- messages --------------------------------------------------------------------------
 
@@ -441,17 +372,21 @@
     function unchanged() {
         return !!state.start && state.start.kind !== 'import' && !dirty() && (state.name || '').trim() === nameFor(state.start);
     }
-    /** What neo-web is told to wear for the start used as it is; undefined: there is nothing to switch to. */
+    /** The theme to wear for the start used as it is; undefined: there is nothing to switch to. */
     function startChoice() {
         var s = state.start;
         if (s.kind === 'dark') return null;
         if (s.kind === 'preset') {
             var preset = state.presets.find(function (e) { return 'preset:' + e.stylesheet === s.key; });
-            return preset ? Object.assign({ pkg: PKG, stylesheet: preset.stylesheet, label: preset.label, scheme: s.scheme }, state.version ? { version: state.version } : {}) : undefined;
+            return preset ? { pkg: PKG, stylesheet: preset.stylesheet, label: preset.label, scheme: s.scheme } : undefined;
         }
         if (s.kind === 'mine') return { pkg: LOCAL, stylesheet: s.id + '.css', label: s.label, scheme: s.scheme };
-        if (s.kind === 'inuse') return state.inUse ? state.inUse.choice : undefined;
         return undefined;
+    }
+    /** One of the user's themes that has a sign-in picture: its id, the key the picture is kept under. */
+    function pictureIdOf(aId) {
+        var own = state.mine.find(function (e) { return e.id === aId; });
+        return own && own.loginImage ? own.id : undefined;
     }
     /** The start used as it is is the theme in use already. */
     function startInUse() {
@@ -465,29 +400,14 @@
         if (!unchanged()) return saveTheme({ use: true });
         var choice = startChoice();
         if (choice === undefined || startInUse()) return;
-        var previous = currentChoice();
+        var previous = S.readState();
         var label = choice ? choice.label : 'Dark';
-        tell({ action: 'apply', choice: choice });
-        say(label + ' is in use.', 'ok', {
-            label: 'Undo',
-            run: function () {
-                tell({ action: 'apply', choice: previous && previous.pkg ? previous : null });
-                say('Back to ' + (previous && previous.label ? previous.label : 'Dark') + '.', 'ok');
-            },
-        });
-    }
-    /** A theme neo-web asked to open here (Settings → Theme, Edit): opened like a click on its card. */
-    function openRequested() {
-        var r = state.editRequest;
-        if (!r || !state.start) return;
-        state.editRequest = null;
-        var own = r.pkg === LOCAL ? state.mine.find(function (e) { return e.id + '.css' === r.stylesheet; }) : null;
-        var preset = !own && r.pkg === PKG ? state.presets.find(function (e) { return e.stylesheet === r.stylesheet; }) : null;
-        var key = own ? 'mine:' + own.id : preset ? 'preset:' + preset.stylesheet : null;
-        if (!key || key === state.start.key) return;
-        if (dirty() && !window.confirm('Leave the changes you made to ' + (state.name || 'this theme') + ' and open ' + (own || preset).label + '?')) return;
-        if (own) chooseMine(own);
-        else chooseEntry('preset', preset);
+        var r = wear(choice, state.start.vars, choice && state.start.kind === 'mine' ? pictureIdOf(state.start.id) : undefined);
+        if (!r.ok) {
+            say('Could not use ' + label + ' (' + r.reason + ').', 'error');
+            return;
+        }
+        sayInUse(label, previous);
     }
     function chooseDark() {
         choose({ key: 'dark', kind: 'dark', label: 'Dark', scheme: 'dark', vars: {} });
@@ -503,33 +423,26 @@
     function chooseMine(aEntry) {
         choose({ key: 'mine:' + aEntry.id, kind: 'mine', id: aEntry.id, label: aEntry.label, scheme: aEntry.scheme === 'light' ? 'light' : 'dark', vars: C.parseCss(aEntry.css), roles: aEntry.roles, pinned: aEntry.pinned, picture: null });
         if (!aEntry.loginImage) return;
-        // its picture is a file neo-web keeps (IndexedDB): asked for, shown when it comes
+        // its picture is a file kept in IndexedDB: read, shown when it comes
         var key = state.start.key;
-        ask({ action: 'picture', id: aEntry.id }).then(
-            function (r) {
-                if (!state.start || state.start.key !== key || !isPicture(r.picture)) return;
-                // not changed here meanwhile: the theme's picture is the one on screen
-                if (state.picture === state.start.picture) state.picture = r.picture;
-                state.start.picture = r.picture;
-                renderLogin();
-                renderPreview();
-            },
-            function () { /* not answered: the theme opens without its picture */ }
-        );
-    }
-    function chooseInUse() {
-        var u = state.inUse;
-        choose({ key: 'inuse', kind: 'inuse', label: u.choice.label || u.choice.pkg, scheme: u.choice.scheme === 'light' ? 'light' : 'dark', vars: u.vars });
+        S.readPicture(aEntry.id).then(function (picture) {
+            if (!state.start || state.start.key !== key || !isPicture(picture)) return;
+            // not changed here meanwhile: the theme's picture is the one on screen
+            if (state.picture === state.start.picture) state.picture = picture;
+            state.start.picture = picture;
+            renderLogin();
+            renderPreview();
+        });
     }
 
     // ---- save / delete ---------------------------------------------------------------------
 
     /** Why Save cannot be used now, or '' when it can. */
     function cannotSave() {
-        return state.hosted ? '' : 'Open the Theme Builder from the web UI (Settings → Theme) to save';
+        return '';
     }
 
-    /** Saves the theme in this browser: neo-web keeps it (no server write). */
+    /** Saves the theme in this browser (theme-store.js; no server write). */
     function saveTheme(aOptions) {
         if (state.busy) return;
         if (cannotSave()) {
@@ -544,36 +457,41 @@
         var entry = { id: id, label: label, scheme: state.scheme, css: css, swatch: C.swatchOf(vars, state.defaults), note: 'Mine', roles: state.own, pinned: state.pinned, saved: Date.now() };
         var choice = { pkg: LOCAL, stylesheet: id + '.css', label: label, scheme: state.scheme };
         var wasInUse = isInUse(LOCAL, choice.stylesheet);
-        var previous = currentChoice();
+        var previous = S.readState();
         var saved = { own: Object.assign({}, state.own), pinned: Object.assign({}, state.pinned), picture: state.picture };
+        var put = function () { return wear(choice, vars, saved.picture ? id : undefined); };
         state.busy = true;
         renderTop();
-        // the picture goes as the file it is; null takes the theme's away
-        ask({ action: 'save', theme: entry, picture: state.picture || null })
-            .then(function (r) {
+        // the picture is kept first, as the file it is (null takes the theme's away); the entry only says it has one
+        S.writePicture(id, saved.picture || null)
+            .then(function () {
+                if (saved.picture) entry.loginImage = true;
+                var r = S.saveMine(entry);
                 if (!r.ok) {
-                    say('Could not save in this browser (' + (r.reason || 'the web UI refused it') + '). Export CSS keeps a copy.', 'error');
+                    say('Could not save in this browser (' + r.reason + '). Export CSS keeps a copy.', 'error');
                     return;
                 }
+                state.mine = S.readMine();
                 state.start = { key: 'mine:' + id, kind: 'mine', id: id, label: label, scheme: choice.scheme, vars: vars, roles: saved.own, pinned: saved.pinned, picture: saved.picture };
                 readStart(state.start);
                 state.own = Object.assign({}, state.start.own);
                 state.editingId = id;
                 state.name = label;
                 if (aOptions && aOptions.use) {
-                    tell({ action: 'apply', choice: choice, reload: true });
-                    say(label + ' is in use.', 'ok', {
-                        label: 'Undo',
-                        run: function () {
-                            tell({ action: 'apply', choice: previous && previous.pkg ? previous : null });
-                            say('Back to ' + (previous && previous.label ? previous.label : 'Dark') + '.', 'ok');
-                        },
-                    });
+                    put();
+                    sayInUse(label, previous);
                 } else if (wasInUse) {
-                    tell({ action: 'apply', choice: choice, reload: true });
+                    put();
                     say('Saved — the theme in use is updated.', 'ok');
                 } else {
-                    say('Saved in this browser.', 'ok', { label: 'Use it', run: function () { tell({ action: 'apply', choice: choice, reload: true }); say(label + ' is in use.', 'ok'); } });
+                    say('Saved in this browser.', 'ok', {
+                        label: 'Use it',
+                        run: function () {
+                            var before = S.readState();
+                            put();
+                            sayInUse(label, before);
+                        },
+                    });
                 }
             }, function (err) {
                 say('Could not save (' + err.message + '). Export CSS keeps a copy.', 'error');
@@ -586,19 +504,17 @@
 
     function deleteMine(aEntry) {
         if (!window.confirm('Delete the theme "' + aEntry.label + '"?')) return;
-        // neo-web takes the theme in use back to Dark when it is this one
-        ask({ action: 'delete', id: aEntry.id }).then(
-            function (r) {
-                if (!r.ok) {
-                    say('Delete failed: ' + (r.reason || 'the web UI refused it'), 'error');
-                    return;
-                }
-                if (state.editingId === aEntry.id) state.editingId = null;
-                say('Deleted ' + aEntry.label + '.', 'ok');
-                render();
-            },
-            function (err) { say('Delete failed: ' + err.message, 'error'); }
-        );
+        // the theme in use goes back to Dark when it is this one (theme-store.js)
+        var r = S.deleteMine(aEntry.id);
+        if (!r.ok) {
+            say('Delete failed: ' + r.reason, 'error');
+            return;
+        }
+        state.mine = S.readMine();
+        if (state.editingId === aEntry.id) state.editingId = null;
+        say('Deleted ' + aEntry.label + '.', 'ok');
+        worn();
+        render();
     }
 
     // ---- render: top -----------------------------------------------------------------------
@@ -640,7 +556,6 @@
     }
     function renderStarts() {
         var html = '';
-        if (state.inUse) html += startHtml('inuse', state.inUse.choice.label || state.inUse.choice.pkg, '', C.swatchOf(state.inUse.vars, state.defaults), true, false);
         html += startHtml('dark', 'Dark', 'Built-in', C.swatchOf({}, state.defaults), !currentChoice(), false);
         html += state.presets.map(function (e) { return startHtml('preset:' + e.stylesheet, e.label, 'Preset', e.swatch || [], isInUse(PKG, e.stylesheet), false); }).join('');
         html += '<span class="tb-starts-label">My themes · this browser</span>';
@@ -1269,7 +1184,6 @@
         var key = card.getAttribute('data-start');
         if (state.start && key !== state.start.key && dirty() && !window.confirm('Leave the changes you made to ' + (state.name || 'this theme') + ' and start from another theme?')) return;
         if (key === 'dark') return chooseDark();
-        if (key === 'inuse') return chooseInUse();
         var preset = state.presets.find(function (p) { return 'preset:' + p.stylesheet === key; });
         if (preset) return chooseEntry('preset', preset);
         var own = state.mine.find(function (m) { return 'mine:' + m.id === key; });
@@ -1462,55 +1376,28 @@
 
     // ---- start -----------------------------------------------------------------------------
 
-    // the theme in use is worn once neo-web answers (refreshMine)
+    // the token list is this package's (generated/builder-tokens.js); the theme in use is the state's
+    state.tokens = (T.tokens || []).filter(function (t) { return t && typeof t.name === 'string' && typeof t.dark === 'string'; });
+    state.tokens.forEach(function (t) { state.defaults[t.name] = t.dark; });
+    C.useFallbacks(state.tokens);
+    state.mine = S.readMine();
+    if (!state.tokens.length) say('The token list is missing (generated/builder-tokens.js): reinstall the Theme Builder.', 'error');
     Promise.all([
-        fetch('/web/ui/theme-tokens.json', { cache: 'no-store' }).then(function (r) {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-        }),
         readIndex('themes.json'),
-        refreshMine(),
         fetch(BASE + 'impact.json', { cache: 'no-store' }).then(
             function (r) { return r.ok ? r.json() : null; },
             function () { return null; }
         ),
-        readText(BASE + 'package.json').then(
-            function (t) { var v = JSON.parse(t).version; state.version = typeof v === 'string' && /^[0-9A-Za-z][0-9A-Za-z.+-]{0,39}$/.test(v) ? v : ''; },
-            function () { /* no version: a preset used as it is is linked without one */ }
-        ),
-    ])
-        .then(function (res) {
-            state.impact = res[3] && res[3].tokens ? res[3] : null;
-            state.tokens = res[0].filter(function (t) { return t && typeof t.name === 'string' && typeof t.dark === 'string'; });
-            state.tokens.forEach(function (t) { state.defaults[t.name] = t.dark; });
-            C.useFallbacks(state.tokens);
-            state.presets = res[1];
-            renderTokenGroups();
-            // Open on the theme neo-web asked for (Settings → Theme, Edit), else on the theme in use:
-            // one of ours, another package's (read from its stylesheet), or Dark.
-            var r = state.editRequest;
-            state.editRequest = null;
-            var asked = r && r.pkg === LOCAL ? state.mine.find(function (e) { return e.id + '.css' === r.stylesheet; }) : null;
-            if (asked) return chooseMine(asked);
-            var askedPreset = r && r.pkg === PKG ? state.presets.find(function (e) { return e.stylesheet === r.stylesheet; }) : null;
-            if (askedPreset) return chooseEntry('preset', askedPreset);
-            var c = currentChoice();
-            var own = c && c.pkg === LOCAL ? state.mine.find(function (e) { return e.id + '.css' === c.stylesheet; }) : null;
-            if (own) return chooseMine(own);
-            var preset = c && c.pkg === PKG ? state.presets.find(function (e) { return e.stylesheet === c.stylesheet; }) : null;
-            if (preset) return chooseEntry('preset', preset);
-            if (c && c.pkg && c.stylesheet) {
-                return readText(hrefOf(c.pkg, c.stylesheet)).then(
-                    function (css) {
-                        state.inUse = { choice: c, vars: C.parseCss(css) };
-                        chooseInUse();
-                    },
-                    chooseDark
-                );
-            }
-            chooseDark();
-        })
-        .catch(function (err) {
-            say('This web UI does not publish its theme variables (theme-tokens.json: ' + err.message + '). The builder needs a newer machbase-neo.', 'error');
-        });
+    ]).then(function (res) {
+        state.presets = res[0];
+        state.impact = res[1] && res[1].tokens ? res[1] : null;
+        renderTokenGroups();
+        // open on the theme in use: one of ours, else Dark
+        var c = currentChoice();
+        var own = c && c.pkg === LOCAL ? state.mine.find(function (e) { return e.id + '.css' === c.stylesheet; }) : null;
+        if (own) return chooseMine(own);
+        var preset = c && c.pkg === PKG ? state.presets.find(function (e) { return e.stylesheet === c.stylesheet; }) : null;
+        if (preset) return chooseEntry('preset', preset);
+        chooseDark();
+    });
 })();

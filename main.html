@@ -4,11 +4,15 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Theme Builder</title>
-        <link rel="stylesheet" href="builder.css?v=1.0.0" />
-        <link rel="stylesheet" href="preview.css?v=1.0.0" />
-        <script src="theme-core.js?v=1.0.0"></script>
-        <script src="cursor-fx.js?v=1.0.0"></script>
-        <script src="builder.js?v=1.0.0" defer></script>
+        <link rel="stylesheet" href="builder.css?v=1.1.0" />
+        <link rel="stylesheet" href="preview.css?v=1.1.0" />
+        <!-- the builder's own page wears the theme in use as any package's app does (theme contract v1) -->
+        <script src="cgi-bin/theme/v1/sync"></script>
+        <script src="generated/builder-tokens.js?v=1.1.0"></script>
+        <script src="theme-core.js?v=1.1.0"></script>
+        <script src="theme-store.js?v=1.1.0"></script>
+        <script src="cursor-fx.js?v=1.1.0"></script>
+        <script src="builder.js?v=1.1.0" defer></script>
     </head>
     <body>
         <div class="tb">

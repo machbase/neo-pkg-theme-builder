@@ -25,11 +25,11 @@
     --neo-tooltip-bg: #e3e6f6; --neo-tooltip-text: #1f2147; --neo-tooltip-border: #e0b000;
     --neo-shadow-sm: 0 2px 2px rgba(31, 33, 71, 0.08); --neo-shadow-md: 0 4px 6px rgba(31, 33, 71, 0.09);
     --neo-shadow-lg: 0 8px 10px rgba(31, 33, 71, 0.11); --neo-shadow-xl: 0 10px 25px rgba(31, 33, 71, 0.18);
-    /* file icons: each hue only as deep as this theme needs to read 3:1 on its panels, rows and tabs */
-    --neo-icon-folder: #b99000; --neo-icon-folder-git: #f8693c; --neo-icon-folder-public: #379beb; --neo-icon-sql: #b99000;
-    --neo-icon-tql: #45a94a; --neo-icon-taz: #26a69a; --neo-icon-taz-gray: #90939c; --neo-icon-wrk: #379beb;
-    --neo-icon-md: #379beb; --neo-icon-json: #bc8c00; --neo-icon-csv: #6da324; --neo-icon-doc: #78909c;
-    --neo-icon-image: #26a69a; --neo-icon-svg: #c38800; --neo-icon-shell: #f8693c; --neo-icon-powershell: #009ce2;
-    --neo-icon-new: #959595; --neo-icon-html: #ee6c6a; --neo-icon-css: #3597f3; --neo-icon-js: #aa9200;
-    --neo-icon-dsh: #ee696a;
+    /* file icons: each only as deep as this theme needs to read 1.5:1 on its panels, selected row and tabs (theme-core's iconOn) */
+    --neo-icon-folder: #e89d00; --neo-icon-folder-git: #ff7043; --neo-icon-folder-public: #42a5f5; --neo-icon-sql: #e89d00;
+    --neo-icon-tql: #4caf50; --neo-icon-taz: #26a69a; --neo-icon-taz-gray: #9fa2ab; --neo-icon-wrk: #42a5f5;
+    --neo-icon-md: #42a5f5; --neo-icon-json: #e99b00; --neo-icon-csv: #85bd43; --neo-icon-doc: #78909c;
+    --neo-icon-image: #26a69a; --neo-icon-svg: #f09b00; --neo-icon-shell: #ff7043; --neo-icon-powershell: #03a9f4;
+    --neo-icon-new: #ababab; --neo-icon-html: #fc7976; --neo-icon-css: #399af6; --neo-icon-js: #e1a100;
+    --neo-icon-dsh: #fc7676;
 }

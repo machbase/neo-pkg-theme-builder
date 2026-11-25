@@ -1,8 +1,8 @@
 {
     "name": "neo-pkg-theme-builder",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Theme Builder for the machbase-neo web UI: make your own themes, starting from Dark or the Light, Cyberpunk, Aemeath and Cement 98 presets",
-    "minServerVersion": "8.7.2",
+    "minServerVersion": "8.9.0",
     "neoTheme": {
         "label": "Theme Builder",
         "index": "themes.json"
